@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>regen.io</title>
+</head>
+<body>
+    <div class="container">
+        <img src="{{ url_for('static', filename='RESGEN_IO.png') }}" alt="Logo" class="logo">
+        <h1>resgen.io</h1>
+        <form method="post">
+            <input class="btn" type="submit" value="Generate Resume">
+        </form>
+        <a class="btn" href="{{ url_for('archive') }}">View Archive</a>
+    </div>
+</body>
+</html>

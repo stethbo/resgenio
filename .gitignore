@@ -1,3 +1,5 @@
 cv-venv
 *.pdf
 *.csv
+.env
+/app/instance

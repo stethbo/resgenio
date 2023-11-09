@@ -1,11 +1,14 @@
 import os
 import sys
+import re
 import logging
 import time
+from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
+
 
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(levelname)s - %(message)s')
@@ -14,9 +17,10 @@ logger = logging.getLogger(__name__)
 
 load_dotenv()
 URL = 'https://www.linkedin.com'
-USER_URL = "https://www.linkedin.com/in/stefan-borek-662510236/"
+USER_URL = "https://www.linkedin.com/in/stefan-borek-662510236"
 USERNAME = os.environ.get("IN_USERNAME")
 PASSWORD = os.environ.get("IN_PASSWORD")
+
 
 def log_in_vol_1(driver):
     username_input = driver.find_element(By.ID, 'email-or-phone')
@@ -28,6 +32,7 @@ def log_in_vol_1(driver):
     logger.info('Keys sent to form🔑')
     login_button.click()
     time.sleep(1)
+    print("log in method 1")
 
     return driver
 
@@ -43,6 +48,7 @@ def log_in_vol_2(driver):
     logger.info('Keys sent to form🔑')
     login_button.click()
     time.sleep(1)
+    print("log in method 2")
 
     return driver
 
@@ -58,42 +64,13 @@ def log_in_vol_3(driver):
     logger.info('Keys sent to form🔑')
     login_button.click()
     time.sleep(1)
+    print("log in method 3")
 
     return driver
 
 
-def go_to_profile(driver):
-    try:
-        profile_picture = driver.find_element(By.XPATH, '//*[@id="ember164"]')
-    except:
-        try:
-            profile_picture = driver.find_element(By.ID, 'ember463')
-        except:
-            logger.warning('I CANT CLICK😩🤯')
-            try:
-                profile_picture = driver.find_element(By.CLASS_NAME, 't-16 t-black t-bold')
-            except:
-                logger.error("R.I.P.💀💔 ")
-
-    profile_picture.click()
-    time.sleep(2)
-    return driver
-
-
-def get_experience(driver):
-
-    section = driver.find_element(By.CLASS_NAME, 'pvs-list__outer-container')
-    logger.info('Found correct section🔬')
-    child_elements = section.find_elements(By.XPATH, './*')
-    logger.info(f"Going to list all children of {section}")
-    for child in child_elements:
-        print(child.text)
-    print('--all elements above--')
-    return driver
-
-
-def main():
-    driver = webdriver.Chrome()
+def get_page_source():
+    driver = webdriver.Firefox()
     driver.get(URL)
     try:
         driver = log_in_vol_1(driver)
@@ -110,39 +87,83 @@ def main():
                 logger.warning('Could not find IDs session_key session_password')
                 driver.close()
                 sys.exit()
-    
-
-    # logger.info(f'ACTION 2: --- find a user with search')
-    # try:
-    #     driver = find_user(driver, "stefan borek")
-    # except:
-    #     logger.info('Failed to perform a user search😢')
-
 
     driver.get(USER_URL)
-    time.sleep(3)
+    time.sleep(2)
     try:
-        driver = get_experience(driver)
-    except:
-        logger.info('Failed to retrieve experience')
-
-    page_source = driver.page_source
-
-    from bs4 import BeautifulSoup
-
-    # Use BeautifulSoup to parse the page source
-    soup = BeautifulSoup(page_source, 'html.parser')
-
-    # Now you can find elements by tag, class, id, etc.
-    # For example, to find all the paragraphs you can use:
-    paragraphs = soup.find_all('main')
-
-    for paragraph in paragraphs:
-        print(paragraph.text)
-
+        page_source = driver.page_source
+        logger.info("Got page source")
+    except Exception as e:
+        page_source = None
+        logger.error(f'Failed to get the page source :/')
+        logger.error(f'Got execption: {e}')
+    
     driver.close()
 
+    return page_source
 
+def generate_page_paragraphs(save_to: str):
+    page_source = get_page_source()
+    soup = BeautifulSoup(page_source, 'html.parser')
+    with open('../data/whole_source.txt', 'w') as file_:
+        file_.write(soup.text)
+
+    paragraphs = soup.find_all('span', class_='visually-hidden')
+    logger.info(f'Found total of: {len(paragraphs)} paragraphs.')
+    with open(save_to, 'w') as txt_file:
+        for paragraph in paragraphs:
+            line = paragraph.text
+            line = re.sub(r'\s{2,}', '', line)
+            line = re.sub(r'\n', '', line)
+            if line != '':
+                txt_file.write(line + '\n')
+                
+        logger.info(f'Saved to file: {save_to}🥨')    
+
+
+def get_first_match(text: str, pattern: re.compile) -> str:
+
+    match = pattern.search(text)
+
+    if match:
+        content = match.group(1)
+    else:
+        content = '<Not found>'
+        logger.info(f"No match found for patter: {pattern}")
+
+    return content
+
+
+def get_section(soup_text: BeautifulSoup.text, start_keyword: str, end_keyword: str):
+
+    pattern = re.compile(rf'{start_keyword}(.*?){end_keyword}', re.DOTALL)
+
+    return get_first_match(soup_text, pattern)
+
+
+def get_user_info(user_url: str=USER_URL) -> str:
+    user_id = USER_URL.split('/')[-1]
+    logger.info(f"Working on user ID: {user_id}")
+    paragraphs_file = os.path.join("..", "data", f"page_paragraphs_{user_id}.txt")
+
+    if not os.path.exists(path=paragraphs_file):
+        generate_page_paragraphs(paragraphs_file)
+
+    # generate_page_paragraphs(paragraphs_file)
+    
+    page_content = open(paragraphs_file, 'r').read()
+    
+    user_info = ''
+    user_info += 'Experience:\n' + get_section(page_content, 'Experience', 'Education')
+    user_info += 'Education\n' + get_section(page_content, 'Education', 'Licenses & certifications')
+    user_info += 'Certifications\n' + get_section(page_content, 'Licenses & certifications', 'Interests')
+
+    return user_info
+
+def main():
+    get_user_info()
+    
+    logger.info('See you G🦍 ')
 
 if __name__ == "__main__":
     main()

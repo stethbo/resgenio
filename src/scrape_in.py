@@ -8,6 +8,8 @@ from dotenv import load_dotenv
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
+
 
 
 logging.basicConfig(level=logging.INFO,
@@ -70,14 +72,15 @@ def log_in_vol_3(driver):
     return driver
 
 
-def get_page_source():
-    driver = webdriver.Firefox()
-    driver.get(URL)
+def get_page_source(user_url: str):
+    options = Options()
+    options.headless = True
+    driver = webdriver.Chrome(options=options)
+    driver.get(URL) # going to LinkedIn.com
     try:
         driver = log_in_vol_1(driver)
     except:
         logger.warning('Could not find "email-or-phone" or "password"')
-    
         try:
             driver = log_in_vol_2(driver)
         except:
@@ -89,11 +92,12 @@ def get_page_source():
                 driver.close()
                 sys.exit()
 
-    driver.get(USER_URL)
+    driver.get(user_url)
     time.sleep(2)
+
     try:
         page_source = driver.page_source
-        logger.info("Got page source")
+        logger.info(f"Got page source of type: {type(page_source)}")
     except Exception as e:
         page_source = None
         logger.error(f'Failed to get the page source :/')
@@ -103,14 +107,13 @@ def get_page_source():
 
     return page_source
 
-def generate_page_paragraphs(save_to: str):
-    page_source = get_page_source()
-    soup = BeautifulSoup(page_source, 'html.parser')
-    with open('../data/whole_source.txt', 'w') as file_:
-        file_.write(soup.text)
 
+def generate_page_paragraphs(save_to: str, profile_url: str):
+    page_source = get_page_source(user_url=profile_url)
+    soup = BeautifulSoup(page_source, 'html.parser')
     paragraphs = soup.find_all('span', class_='visually-hidden')
     logger.info(f'Found total of: {len(paragraphs)} paragraphs.')
+
     with open(save_to, 'w') as txt_file:
         for paragraph in paragraphs:
             line = paragraph.text
@@ -142,25 +145,27 @@ def get_section(soup_text: BeautifulSoup.text, start_keyword: str, end_keyword: 
     return get_first_match(soup_text, pattern)
 
 
-def get_user_info(user_url: str=USER_URL) -> str:
-    user_id = USER_URL.split('/')[-1]
+def get_user_info(user_url: str) -> str:
+    user_id = re.sub(r'/$', '', user_url)  # deleting the / if exist at the end of a string
+    user_id = user_id.split('/')[-1]  # getting the user ID from URL
     logger.info(f"Working on user ID: {user_id}")
     paragraphs_file = os.path.join("..", "data", f"page_paragraphs_{user_id}.txt")
 
     if not os.path.exists(path=paragraphs_file):
-        generate_page_paragraphs(paragraphs_file)
+        generate_page_paragraphs(paragraphs_file, profile_url=user_url)
     
     page_content = open(paragraphs_file, 'r').read()
     
     user_info = ''
     user_info += 'Experience:\n' + get_section(page_content, 'Experience', 'Education')
-    user_info += 'Education\n' + get_section(page_content, 'Education', 'Licenses & certifications')
-    user_info += 'Certifications\n' + get_section(page_content, 'Licenses & certifications', 'Interests')
+    user_info += '\nEducation\n' + get_section(page_content, 'Education', 'Licenses & certifications')
+    user_info += '\nCertifications\n' + get_section(page_content, 'Licenses & certifications', 'Skills')
+    # user_info += '\nSkills\n' + get_section(page_content, 'Skills', 'Interests')
 
     return user_info
 
 def main():
-    user_info = get_user_info()
+    user_info = get_user_info(USER_URL)
     print(f'Got following user info:\n {user_info}')
     logger.info('See you G🦍 ')
 

@@ -20,6 +20,7 @@ URL = 'https://www.linkedin.com'
 USER_URL = "https://www.linkedin.com/in/stefan-borek-662510236"
 USERNAME = os.environ.get("IN_USERNAME")
 PASSWORD = os.environ.get("IN_PASSWORD")
+#TODO: add at least 1 extra account to switch en case failed log in🥷
 
 
 def log_in_vol_1(driver):
@@ -148,8 +149,6 @@ def get_user_info(user_url: str=USER_URL) -> str:
 
     if not os.path.exists(path=paragraphs_file):
         generate_page_paragraphs(paragraphs_file)
-
-    # generate_page_paragraphs(paragraphs_file)
     
     page_content = open(paragraphs_file, 'r').read()
     
@@ -161,8 +160,8 @@ def get_user_info(user_url: str=USER_URL) -> str:
     return user_info
 
 def main():
-    get_user_info()
-    
+    user_info = get_user_info()
+    print(f'Got following user info:\n {user_info}')
     logger.info('See you G🦍 ')
 
 if __name__ == "__main__":

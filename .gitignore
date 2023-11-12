@@ -3,3 +3,6 @@ cv-venv
 *.csv
 .env
 /app/instance
+/instance
+/data
+*/__pycache__

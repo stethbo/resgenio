@@ -73,12 +73,27 @@ li:last-child {
 
 .login-form {
     width: 100%;
-    max-width: 320px;
+    max-width: 620px;
     margin-top: 50px;
     background: #fff;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.data-form {
+    width: 100%;
+    max-width: 1080px;
+    margin-top: 50px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}   
+
+.wide-input {
+    width: 60%;
+    font-size: small;
 }
 
 .login-form .form-control {
@@ -116,5 +131,9 @@ li:last-child {
 .card-footer {
     background: none;
     border-top: none;
+}
+
+.text-muted {
+    color: red;
 }
 

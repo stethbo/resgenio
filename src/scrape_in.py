@@ -10,11 +10,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 
-
-
-logging.basicConfig(level=logging.INFO,
-                    format='%(asctime)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(__file__)
 
 
 load_dotenv()
@@ -108,23 +104,6 @@ def get_page_source(user_url: str):
     return page_source
 
 
-def generate_page_paragraphs(save_to: str, profile_url: str):
-    page_source = get_page_source(user_url=profile_url)
-    soup = BeautifulSoup(page_source, 'html.parser')
-    paragraphs = soup.find_all('span', class_='visually-hidden')
-    logger.info(f'Found total of: {len(paragraphs)} paragraphs.')
-
-    with open(save_to, 'w') as txt_file:
-        for paragraph in paragraphs:
-            line = paragraph.text
-            line = re.sub(r'\s{2,}', '', line)
-            line = re.sub(r'\n', '', line)
-            if line != '':
-                txt_file.write(line + '\n')
-                
-        logger.info(f'Saved to file: {save_to}🥨')    
-
-
 def get_first_match(text: str, pattern: re.compile) -> str:
 
     match = pattern.search(text)
@@ -145,27 +124,53 @@ def get_section(soup_text: BeautifulSoup.text, start_keyword: str, end_keyword: 
     return get_first_match(soup_text, pattern)
 
 
-def get_user_info(user_url: str) -> str:
-    user_id = re.sub(r'/$', '', user_url)  # deleting the / if exist at the end of a string
-    user_id = user_id.split('/')[-1]  # getting the user ID from URL
-    logger.info(f"Working on user ID: {user_id}")
-    paragraphs_file = os.path.join("..", "data", f"page_paragraphs_{user_id}.txt")
-
-    if not os.path.exists(path=paragraphs_file):
-        generate_page_paragraphs(paragraphs_file, profile_url=user_url)
-    
-    page_content = open(paragraphs_file, 'r').read()
-    
+def cut_key_paragraphs(page_content: str) -> str:
     user_info = ''
     user_info += 'Experience:\n' + get_section(page_content, 'Experience', 'Education')
     user_info += '\nEducation\n' + get_section(page_content, 'Education', 'Licenses & certifications')
     user_info += '\nCertifications\n' + get_section(page_content, 'Licenses & certifications', 'Skills')
-    # user_info += '\nSkills\n' + get_section(page_content, 'Skills', 'Interests')
+    return user_info
+
+
+def generate_page_paragraphs(profile_url: str):
+    page_source = get_page_source(user_url=profile_url)
+    soup = BeautifulSoup(page_source, 'html.parser')
+    paragraphs = soup.find_all('span', class_='visually-hidden')
+    logger.info(f'Found total of: {len(paragraphs)} paragraphs.')
+
+    page_content = ''
+    for paragraph in paragraphs:
+        line = paragraph.text
+        line = re.sub(r'\s{2,}', '', line)
+        line = re.sub(r'\n', '', line)
+        if line != '':
+            page_content += line + '\n'
+
+    user_info = f'LinkedIn: {profile_url}\n\n' + cut_key_paragraphs(page_content)
 
     return user_info
 
+
+def get_linkedin_data(user_url: str) -> str:
+    user_id = re.sub(r'/$', '', user_url)  # deleting the / if exist at the end of a string
+    user_id = user_id.split('/')[-1]  # getting the user ID from URL
+    logger.info(f"Working on user ID: {user_id}")
+    paragraphs_file = os.path.join("data", f"user_info_{user_id}.txt")
+
+    if not os.path.exists(path=paragraphs_file):
+
+        user_info = generate_page_paragraphs(profile_url=user_url)
+
+        with open(paragraphs_file, 'w') as file_:
+            file_.write(user_info)
+    else:
+        user_info = open(paragraphs_file, 'r').read()
+
+    return user_info
+
+
 def main():
-    user_info = get_user_info(USER_URL)
+    user_info = get_linkedin_data(USER_URL)
     print(f'Got following user info:\n {user_info}')
     logger.info('See you G🦍 ')
 

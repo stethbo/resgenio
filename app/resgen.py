@@ -1,13 +1,16 @@
 import os
 from dotenv import load_dotenv
 from flask import Flask
-from flask import render_template, redirect, url_for, flash
+from flask import render_template, redirect, url_for, flash, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask import session, request
-from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required
-from datetime import datetime
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
+from flask_wtf import FlaskForm
+from wtforms import StringField, TextAreaField, SubmitField
+from wtforms.validators import DataRequired, Email, Optional
 
+from src.generate_resume import get_file
 
 app = Flask(__name__)
 
@@ -19,6 +22,7 @@ db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
+
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -33,6 +37,31 @@ class User(UserMixin, db.Model):
     
     def set_password(self, password):
         self.password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
+
+
+class UserDetails(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    full_name = db.Column(db.String(100))
+    email = db.Column(db.String(100))
+    phone_number = db.Column(db.String(20))
+    github = db.Column(db.String(100), nullable=True)
+    personal_website = db.Column(db.String(100), nullable=True)
+    twitter = db.Column(db.String(100), nullable=True)
+    job_description = db.Column(db.Text, nullable=True)
+
+    user = db.relationship('User', backref=db.backref('details', lazy=True))
+
+
+class ResumeForm(FlaskForm):
+    full_name = StringField('Full Name', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    phone_number = StringField('Phone Number', validators=[DataRequired()])
+    github = StringField('GitHub', validators=[Optional()])
+    personal_website = StringField('Personal Website', validators=[Optional()])
+    twitter = StringField('Twitter', validators=[Optional()])
+    job_description = TextAreaField('Job Description', validators=[DataRequired()])
+    submit = SubmitField('Generate Resume')
 
 
 
@@ -91,16 +120,38 @@ def dashboard():
     return render_template('dashboard.html')
 
 
-@app.route('/main', methods=['GET', 'POST'])
-def main():
-    if 'logged_in' not in session:
-        return redirect(url_for('login.html'))
+@app.route('/generate', methods=['GET', 'POST'])
+@login_required
+def generate():
+    user_details = UserDetails.query.filter_by(user_id=current_user.id).first()
+    form = ResumeForm(obj=user_details)
 
-    if request.method == 'POST':
-        # Simulate resume generation and add to activity_db
-        activity_db.append("Resume generated on " + datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+    if form.validate_on_submit():
+        if not user_details:
+            user_details = UserDetails(user_id=current_user.id)
+            db.session.add(user_details)
 
-    return render_template('main.html')
+        form.populate_obj(user_details)
+        db.session.commit()
+
+        # Call your prompt_llm() function here and generate the resume
+        resume_file = get_file(form.data)
+
+        # Then provide a link to download the resume file
+        # This can be done by saving the file and providing a route to download it
+
+        flash('Resume generated successfully.')
+        return redirect(url_for('download_resume', filename=resume_file))
+
+    return render_template('main.html', form=form)
+
+
+@app.route('/download_resume/<filename>')
+@login_required
+def download_resume(filename):
+    # Assuming the resumes are saved in a directory named 'resumes'
+    directory = os.path.join(app.root_path, 'resumes')
+    return send_from_directory(directory, filename, as_attachment=True)
 
 
 @app.route('/logout')

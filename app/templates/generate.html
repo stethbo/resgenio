@@ -4,7 +4,7 @@
         <div class="data-form login-form">
             <div class="card-body">
                 <h2 class="card-title text-center">Generate Resume</h2>
-                <form method="post" class="form-floating">
+                <form method="post" class="form-floating" onsubmit="showLoadingMessage()">
                     {{ form.hidden_tag() }}
                     <div class="form-group">
                         {{ form.linkedin_url.label }} <span class="text-danger">*</span><br>
@@ -64,6 +64,10 @@
                         {{ form.submit(class="btn btn-primary btn-block") }}
                     </div>
                 </form>
+                <div id="loadingMessage" style="display: none;">
+                    <p>We are generating your resume🔥... Please wait😌.</p>
+                    <!-- Additional styling or animations -->
+                </div>
             </div>
             <!-- Optionally, add a footer or other elements here -->
         </div>

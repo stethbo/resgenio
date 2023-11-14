@@ -135,11 +135,6 @@ def cut_key_paragraphs(page_content: str) -> str:
 
 def generate_page_paragraphs(profile_url: str):
     page_source = get_page_source(user_url=profile_url)
-
-    with open('data/whole_source.txt', 'w') as txt_file:
-        txt_file.write(page_source)
-
-
     soup = BeautifulSoup(page_source, 'html.parser')
     paragraphs = soup.find_all('span', class_='visually-hidden')
     logger.info(f'Found total of: {len(paragraphs)} paragraphs.')

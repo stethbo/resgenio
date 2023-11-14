@@ -83,13 +83,8 @@ def generate():
         html_content = markdown.markdown(resume_content)
         HTML(string=html_content).write_pdf(temp_file_path)
 
-        # with tempfile.NamedTemporaryFile(delete=False, suffix='.md') as tmp:
-        #     tmp.write(resume_content.encode('utf-8'))
-        #     temp_file_path = tmp.name
-
         flash('Resume generated successfully.')
         # Redirect to the download route with the path of the temporary file
-        # return redirect(url_for('main.download_resume', temp_file_path=temp_file_path))
         return redirect(url_for('main.preview_pdf', filename='temp.pdf'))
 
     return render_template('generate.html', form=form)

@@ -18,6 +18,7 @@ URL = 'https://www.linkedin.com'
 USER_URL = "https://www.linkedin.com/in/stefan-borek-662510236"
 USERNAME = os.environ.get("IN_USERNAME")
 PASSWORD = os.environ.get("IN_PASSWORD")
+CHROMEDRIVER_PATH = '/usr/local/bin/chromedriver'
 #TODO: add at least 1 extra account to switch en case failed log in🥷
 
 
@@ -70,7 +71,8 @@ def log_in_vol_3(driver):
 
 def get_page_source(user_url: str):
     options = Options()
-    options.headless = True
+    options.add_argument("--headless=new")
+    logger.info(options)
     driver = webdriver.Chrome(options=options)
     driver.get(URL) # going to LinkedIn.com
     try:
@@ -134,6 +136,11 @@ def cut_key_paragraphs(page_content: str) -> str:
 
 def generate_page_paragraphs(profile_url: str):
     page_source = get_page_source(user_url=profile_url)
+
+    with open('data/whole_source.txt', 'w') as txt_file:
+        txt_file.write(page_source)
+
+
     soup = BeautifulSoup(page_source, 'html.parser')
     paragraphs = soup.find_all('span', class_='visually-hidden')
     logger.info(f'Found total of: {len(paragraphs)} paragraphs.')

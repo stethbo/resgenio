@@ -70,7 +70,8 @@ def log_in_vol_3(driver):
 
 def get_page_source(user_url: str):
     options = Options()
-    options.headless = True
+    options.add_argument("--headless=new")
+    logger.info(options)
     driver = webdriver.Chrome(options=options)
     driver.get(URL) # going to LinkedIn.com
     try:

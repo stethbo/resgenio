@@ -137,3 +137,39 @@ li:last-child {
     color: red;
 }
 
+.user-menu {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+}
+
+.user-icon {
+    width: 50px; /* Adjust as needed */
+    height: auto;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.logout-button {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 10px;
+    background-color: #f00; /* Adjust colors as needed */
+    color: white;
+    padding: 5px 10px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.home-button {
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    background-color: #4CAF50; /* Adjust colors as needed */
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+}

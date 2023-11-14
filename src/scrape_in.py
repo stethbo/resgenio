@@ -18,7 +18,6 @@ URL = 'https://www.linkedin.com'
 USER_URL = "https://www.linkedin.com/in/stefan-borek-662510236"
 USERNAME = os.environ.get("IN_USERNAME")
 PASSWORD = os.environ.get("IN_PASSWORD")
-CHROMEDRIVER_PATH = '/usr/local/bin/chromedriver'
 #TODO: add at least 1 extra account to switch en case failed log in🥷
 
 

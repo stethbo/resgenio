@@ -1,5 +1,6 @@
 import os
 import tempfile
+import re
 import logging
 from flask import Blueprint, render_template, redirect, url_for, flash, send_file, send_from_directory
 from flask_login import login_user, logout_user, login_required, current_user
@@ -78,14 +79,15 @@ def generate():
         resume_content = get_resume_content(form.data)
         logger.info(f'Got resume content of type: {type(resume_content)}')
 
-
-        temp_file_path = 'data/temp.pdf'
+        user_id = re.sub(r'/$', '', form.data['linkedin_url'])  # deleting the / if exist at the end of a string
+        user_id = user_id.split('/')[-1]
+        temp_file_path = f"data/{user_id}_resume.pdf"
         html_content = markdown.markdown(resume_content)
         HTML(string=html_content).write_pdf(temp_file_path)
 
         flash('Resume generated successfully.')
         # Redirect to the download route with the path of the temporary file
-        return redirect(url_for('main.preview_pdf', filename='temp.pdf'))
+        return redirect(url_for('main.preview_pdf', filename=temp_file_path.split('/')[-1]))
 
     return render_template('generate.html', form=form)
 

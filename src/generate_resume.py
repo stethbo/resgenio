@@ -64,7 +64,12 @@ def get_resume_content(user_data: dict):
     personal_info = convert_user_data_to_string(user_data)
 
     prompt = create_prompt(user_data['job_description'], personal_info, linkedin_data)
-    resume_content = prompt_llm(prompt)
+    try:
+        resume_content = prompt_llm(prompt)
+    except Exception as api_error:
+        logger.error(f'🫨Error occured while prompting LLM:\n{api_error}')
+        resume_content = ''
+
     resume_content = postprocess(resume_content)
 
     return resume_content

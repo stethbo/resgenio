@@ -3,8 +3,8 @@
     <div class="row h-100 justify-content-center align-items-center">
         <div class="data-form login-form">
             <div class="card-body">
-                <h2 class="card-title text-center">Generate Resume</h2>
-                <form method="post" class="form-floating" onsubmit="showLoadingMessage()">
+                <form id="generateForm" method="post" class="form-floating" onsubmit="showLoadingMessage()">
+                    <h2 class="card-title text-center">Generate Resume</h2>
                     {{ form.hidden_tag() }}
                     <div class="form-group">
                         {{ form.linkedin_url.label }} <span class="text-danger">*</span><br>
@@ -65,11 +65,11 @@
                     </div>
                 </form>
                 <div id="loadingMessage" style="display: none;">
-                    <p>We are generating your resume🔥... Please wait😌.</p>
-                    <!-- Additional styling or animations -->
-                </div>
+                    <!-- <img src="{{ url_for('static', filename='RESGEN_IO.png') }}" alt="Logo" class="logo"> -->
+                    <div class="loader"></div>
+                    <p>generating your <b>CV</b>📝</p>
+                </div>    
             </div>
-            <!-- Optionally, add a footer or other elements here -->
         </div>
     </div>
 {% endblock %}

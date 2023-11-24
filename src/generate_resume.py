@@ -26,9 +26,13 @@ def convert_user_data_to_string(user_data: dict) -> str:
     
 
 def create_prompt(job_desc: str, personal_info: str, linkedin_data: str):
-    prompt = f"Given the job description:\n'{job_desc}'\n Write a tailored resume / CV, fill free to change the order of the \
-    user information and sills, place it in mardown format, make it custom, show to most important skills of the canidate,\
-          you can add some emojis to make it pretty, the candidate information are here: '{personal_info}'\n\n{linkedin_data}"
+    prompt = f"Please create a custom resume in Markdown format for a position described below.\
+        Here are the details to include:\n\
+    {personal_info}\n{linkedin_data}\n\
+    **Desired job description**\n\
+    {job_desc}\m\
+    Please structure the resume to highlight my qualifications effectively, with a professional\
+        layout suitable for a given job application. Include emojis to make it more colorful😊🚀"
     return prompt
 
 

@@ -76,11 +76,11 @@ def generate():
         db.session.commit()
 
         # Generate the resume content
-        resume_content = get_resume_content(form.data, test=False)
-        logger.info(f'Got resume content of type: {type(resume_content)}')
+        resume_content, resume_title = get_resume_content(form.data, test=False)
+
 
         logger.info(f'User id🆔: {current_user.id}')
-        resume = Resumes(user_id=current_user.id, content=resume_content, summary='<tba>')
+        resume = Resumes(user_id=current_user.id, content=resume_content, summary=resume_title)
         db.session.add(resume)
         db.session.commit()
         generated_id = resume.id
@@ -93,6 +93,7 @@ def generate():
 
 
 @main_blueprint.route('/preview/<int:resume_id>')
+@login_required
 def preview(resume_id):
     # Retrieve the resume content by ID
     resume = Resumes.query.get_or_404(resume_id)
@@ -111,6 +112,7 @@ def preview(resume_id):
 
 
 @main_blueprint.route('/pdf_preview/<int:resume_id>')
+@login_required
 def pdf_preview(resume_id):
     resume = Resumes.query.get_or_404(resume_id)
 
@@ -150,8 +152,7 @@ def download_resume(resume_id):
 @main_blueprint.route('/archive')
 @login_required
 def archive():
-    resume_list = Resumes.query.filter_by(user_id=current_user.id).all()
-    
+    resume_list = Resumes.query.filter_by(user_id=current_user.id).order_by(Resumes.id.desc()).all()
     return render_template('archive.html', resume_list=resume_list)
 
 

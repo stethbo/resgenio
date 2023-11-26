@@ -29,3 +29,12 @@ class UserDetails(db.Model):
     job_description = db.Column(db.Text, nullable=True)
 
     user = db.relationship('User', backref=db.backref('details', lazy=True))
+
+
+class Resumes(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    content = db.Column(db.Text, nullable=False)  # For resume content
+    summary = db.Column(db.String(255), nullable=False)  # For summary of the resume
+
+    user = db.relationship('User', backref=db.backref('resumes', lazy=True))

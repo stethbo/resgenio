@@ -8,6 +8,8 @@ from src.scrape_in import get_linkedin_data
 load_dotenv()
 model_api_client = OpenAI()
 MODEL = "gpt-4"
+# MODEL = "gpt-3.5-turbo"
+HELPER_MODEL = "gpt-3.5-turbo"
 
 logger = logging.getLogger(__file__)
 
@@ -28,24 +30,25 @@ def convert_user_data_to_string(user_data: dict) -> str:
 def create_prompt(job_desc: str, personal_info: str, linkedin_data: str):
     prompt = f"Please create a custom resume in Markdown format for a position described below.\
         Here are the details to include:\n\
-    {personal_info}\n{linkedin_data}\n\
-    **Desired job description**\n\
-    {job_desc}\m\
-    Please structure the resume to highlight my qualifications effectively, with a professional\
-        layout suitable for a given job application. Include emojis to make it more colorful😊🚀"
+        '{personal_info}\n{linkedin_data}'\n\
+        Job description:\n\
+        '{job_desc}'\n\
+        Please structure the resume to highlight my qualifications effectively, with a professional\
+        layout suitable for a given job application. Include emojis to make it more colorful😊🚀\
+        don't include any unnecessary informations🔥."
     return prompt
 
 
-def prompt_llm(prompt):
-    logger.info(f"Prompting the LLM, model🦾: {MODEL}")
+def prompt_llm(prompt, model=MODEL):
+    logger.info(f"Prompting the LLM, model🦾: {model}")
     chat_completion = model_api_client.chat.completions.create(
         messages=[
             {
-                "role": "system",
+                "role": "user",
                 "content": prompt,
             }
         ],
-        model=MODEL,
+        model=model,
     )
     finish_reason = chat_completion.choices[0].finish_reason
     logger.info(f"Completion finished🏁, reason {finish_reason}")
@@ -56,24 +59,49 @@ def prompt_llm(prompt):
     return output
 
 
+def chain_prompt_llm(messages, model):
+    logger.info(f"Chain rompting the LLM, model🦾: {model}")
+    chat_completion = model_api_client.chat.completions.create(
+        messages=messages,
+        model=model,
+    )
+    finish_reason = chat_completion.choices[0].finish_reason
+    logger.info(f"Completion finished🏁, reason {finish_reason}")
+    logger.info(f"Completion usage📶: {chat_completion.usage}")
+    return chat_completion.choices[0].message.content
+
+
 def postprocess(resume_content):
     resume_content = re.sub(r'```markdown|```', '', resume_content)
     resume_content = re.sub(r':\W+:', '', resume_content)
     return resume_content
 
 
-def get_resume_content(user_data: dict):
-    user_url = user_data['linkedin_url']
-    linkedin_data = get_linkedin_data(user_url)
-    personal_info = convert_user_data_to_string(user_data)
+def get_resume_content(user_data: dict, test=False) -> tuple([str, str]):
+    if test:
+        with open('data/sample_text.txt') as cv_file:
+            resume_content = cv_file.read()
+    else:
 
-    prompt = create_prompt(user_data['job_description'], personal_info, linkedin_data)
-    try:
-        resume_content = prompt_llm(prompt)
-    except Exception as api_error:
-        logger.error(f'🫨Error occured while prompting LLM:\n{api_error}')
-        resume_content = ''
+        user_url = user_data['linkedin_url']
+        linkedin_data = get_linkedin_data(user_url)
+        personal_info = convert_user_data_to_string(user_data)
 
-    resume_content = postprocess(resume_content)
+        prompt = create_prompt(user_data['job_description'], personal_info, linkedin_data)
+        try:
+            resume_content = prompt_llm(prompt)
 
-    return resume_content
+            try:
+                prompt = f"Summarize the following job descrption in 5 words:\n{user_data['job_description']}"
+                summary = prompt_llm(prompt, model=HELPER_MODEL)
+            except:
+                logger.error(f'Error with chain prompting of {HELPER_MODEL}')
+                summary = ''
+
+        except Exception as api_error:
+            logger.error(f'🫨Error occured while prompting LLM:\n{api_error}')
+            resume_content = ''
+
+        resume_content = postprocess(resume_content)
+
+    return resume_content, summary

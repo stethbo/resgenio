@@ -1,19 +1,18 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <title>Archive Page</title>
-</head>
-<body>
-    <div class="container">
-        <h1>Archive</h1>
-        <ul>
-        {% for activity in activities %}
-            <li>{{ activity }}</li>
+{% extends "base.html" %}
+
+{% block content %}
+<div class="archive">
+    <h2>Resume Archive</h2>
+    <ul class="resume-list">
+        {% for resume in resume_list %}
+            <li>
+                <strong>Summary:</strong> {{ resume.summary }}<br>
+                <a href="{{ url_for('main.preview', resume_id=resume.id) }}">View Full Resume</a>
+            </li>
+        {% else %}
+            <li>No resumes available.</li>
         {% endfor %}
-        </ul>
-        <a class="btn" href="{{ url_for('main') }}">Back to Main</a>
-    </div>
-</body>
-</html>
+    </ul>
+</div>
+{% endblock %}
+

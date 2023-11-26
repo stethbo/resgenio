@@ -29,6 +29,8 @@ def create_app():
     login_manager.init_app(app)
     login_manager.login_view = 'main.login'
 
+    # import to create table on a first run
+    from .models import User, UserDetails, Resumes
     with app.app_context():
         db.create_all()
 

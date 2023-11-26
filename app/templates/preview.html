@@ -3,8 +3,8 @@
     {% block content %}
     <h1>PDF Preview</h1>
         <!-- Embed the PDF file for preview -->
-        <iframe src="{{ url_for('main.pdf_preview', filename=filename) }}" width="600" height="500"></iframe>
+        <iframe src="{{ url_for('main.pdf_preview', resume_id=resume_id) }}" width="600" height="500"></iframe>
         <br>
         <!-- Link to download the PDF file -->
-        <a href="{{ url_for('main.download_pdf', filename=filename) }}">Download PDF</a>
+        <a href="{{ url_for('main.download_resume', resume_id=resume_id) }}">Download PDF</a>
     {% endblock %}

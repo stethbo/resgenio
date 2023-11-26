@@ -1,14 +1,14 @@
 import os
 import tempfile
-import re
+import pdfkit
 import logging
-from flask import Blueprint, render_template, redirect, url_for, flash, send_file, send_from_directory
+from flask import Blueprint, render_template, redirect, url_for, flash, send_file, send_from_directory, make_response
 from flask_login import login_user, logout_user, login_required, current_user
 import markdown
 from weasyprint import HTML
 
 from . import db, bcrypt, login_manager
-from .models import User, UserDetails
+from .models import User, UserDetails, Resumes
 from .forms import LoginForm, RegistrationForm, ResumeForm
 from src.generate_resume import get_resume_content
 
@@ -76,55 +76,83 @@ def generate():
         db.session.commit()
 
         # Generate the resume content
-        resume_content = get_resume_content(form.data)
+        resume_content = get_resume_content(form.data, test=False)
         logger.info(f'Got resume content of type: {type(resume_content)}')
 
-        user_id = re.sub(r'/$', '', form.data['linkedin_url'])  # deleting the / if exist at the end of a string
-        user_id = user_id.split('/')[-1]
-        temp_file_path = f"data/{user_id}_resume.pdf"
-        html_content = markdown.markdown(resume_content)
-        HTML(string=html_content).write_pdf(temp_file_path)
+        logger.info(f'User id🆔: {current_user.id}')
+        resume = Resumes(user_id=current_user.id, content=resume_content, summary='<tba>')
+        db.session.add(resume)
+        db.session.commit()
+        generated_id = resume.id
 
         flash('Resume generated successfully.')
         # Redirect to the download route with the path of the temporary file
-        return redirect(url_for('main.preview_pdf', filename=temp_file_path.split('/')[-1]))
+        return redirect(url_for('main.preview', resume_id=generated_id))
 
     return render_template('generate.html', form=form)
 
 
-@main_blueprint.route('/preview/<filename>')
-def preview_pdf(filename):
-    # Render the preview template
-    print(f"LOCATION: {os.getcwd()}")
-    file_path = os.path.join('data', filename)
-    return render_template('preview.html', filename=filename)
+@main_blueprint.route('/preview/<int:resume_id>')
+def preview(resume_id):
+    # Retrieve the resume content by ID
+    resume = Resumes.query.get_or_404(resume_id)
+
+    # Convert the Markdown content to HTML
+    html_content = markdown.markdown(resume.content)
+    logger.info(f'type of content from DB: {type(html_content)}')
+
+    with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as temp:
+        # Create a path for the temp file to send it
+        temp_file_path = temp.name
+        HTML(string=html_content).write_pdf(temp.name)
+
+    # Render the template with the filename
+    return render_template('preview.html', resume_id=resume_id)
 
 
-@main_blueprint.route('/pdf_preview/<filename>')
-def pdf_preview(filename):
-    # Construct the full file path
-    dir = '/Users/stefan/coding/find_best_cv/data'
-    return send_from_directory(dir, filename)
+@main_blueprint.route('/pdf_preview/<int:resume_id>')
+def pdf_preview(resume_id):
+    resume = Resumes.query.get_or_404(resume_id)
+
+    # Convert the Markdown content to HTML
+    html_content = markdown.markdown(resume.content)
+    logger.info(f'type of content from DB: {type(html_content)}')
+
+    with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as temp:
+        # Create a path for the temp file to send it
+        temp_file_path = temp.name
+        HTML(string=html_content).write_pdf(temp.name)
+
+    return send_file(temp_file_path)
 
 
-
-@main_blueprint.route('/download_pdf/<filename>')
-def download_pdf(filename):
-    dir = '/Users/stefan/coding/find_best_cv/data'
-    return send_from_directory(dir, filename)
-
-
-@main_blueprint.route('/download_resume/<temp_file_path>', methods=['GET'])
+@main_blueprint.route('/download_resume/<int:resume_id>', methods=['GET'])
 @login_required
-def download_resume(temp_file_path):
+def download_resume(resume_id):
 
-    if temp_file_path and os.path.exists(temp_file_path):
-        response = send_file(temp_file_path, as_attachment=True)
-        os.remove(temp_file_path)
-        return response
+    user_name = UserDetails.query.filter_by(user_id=current_user.id).first().full_name
 
-    flash('Error in downloading the file.')
-    return redirect(url_for('main.dashboard'))
+    resume = Resumes.query.get_or_404(resume_id)
+
+    # Convert the Markdown content to HTML
+    html_content = markdown.markdown(resume.content)
+    logger.info(f'type of content from DB: {type(html_content)}')
+
+    with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as temp:
+        # Create a path for the temp file to send it
+        temp_file_path = temp.name
+        HTML(string=html_content).write_pdf(temp.name)
+
+    # Render the template with the filename
+    return make_response(send_file(temp_file_path, as_attachment=True, download_name=f"{user_name.replace(' ', '_').lower()}_resume_{resume_id}.pdf"))
+
+
+@main_blueprint.route('/archive')
+@login_required
+def archive():
+    resume_list = Resumes.query.filter_by(user_id=current_user.id).all()
+    
+    return render_template('archive.html', resume_list=resume_list)
 
 
 @main_blueprint.route('/logout')

@@ -72,7 +72,11 @@ def chain_prompt_llm(messages, model):
 
 
 def postprocess(resume_content):
-    resume_content = re.sub(r'```markdown|```', '', resume_content)
+    markdown_content = re.search(r'```markdown\s*(.*?)\s*```', resume_content)
+    if markdown_content:
+        resume_content = markdown_content.group(1)
+
+    # resume_content = re.sub(r'```markdown|```', '', resume_content)
     resume_content = re.sub(r':\W+:', '', resume_content)
     return resume_content
 
@@ -94,6 +98,8 @@ def get_resume_content(user_data: dict, test=False) -> tuple([str, str]):
             try:
                 prompt = f"Summarize the following job descrption in 5 words:\n{user_data['job_description']}"
                 summary = prompt_llm(prompt, model=HELPER_MODEL)
+                if len(summary.split(' ')) >= 10:
+                    summary = ' '.join(summary.split(' ')[:10])
             except:
                 logger.error(f'Error with chain prompting of {HELPER_MODEL}')
                 summary = ''

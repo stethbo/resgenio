@@ -4,3 +4,39 @@
 
 
 Engineering thesis project by Stefan Borek
+
+
+### **Project structure**
+
+```
+resgen/
+│
+├── app/
+│   ├── __init__.py
+│   ├── models.py
+│   ├── routes.py
+│   ├── forms.py
+│   ├── static/
+│   │   ├── css/
+│   │   ├── js/
+│   │   ├── images/
+│   │
+│   └── templates/
+│       ├── archive.html
+│       ├── base.html
+│       ├── dashboard.html
+│       ├── generate.html
+│       ├── login.html
+│       ├── preview.html
+│       └── register.html
+│
+├── src/
+│   ├── __init__.py
+│   ├── generate_resume.py
+│   └── scrape_in.py
+│
+├── venv/ 
+├── requirements.txt
+├── .gitignore
+└── run.py
+```

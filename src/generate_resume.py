@@ -72,11 +72,10 @@ def chain_prompt_llm(messages, model):
 
 
 def postprocess(resume_content):
-    markdown_content = re.search(r'```markdown\s*(.*?)\s*```', resume_content)
+    markdown_content = re.search(r'(?s)```markdown|md\s*(.*?)\s*```', resume_content)
     if markdown_content:
         resume_content = markdown_content.group(1)
-
-    # resume_content = re.sub(r'```markdown|```', '', resume_content)
+    resume_content = re.sub(r'\:[a-z_]*\:', '', resume_content)
     resume_content = re.sub(r':\W+:', '', resume_content)
     return resume_content
 

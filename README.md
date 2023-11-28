@@ -6,7 +6,7 @@
 Engineering thesis project by Stefan Borek
 
 
-### **Project structure**
+### **Struktura projektu**
 
 ```
 resgen/
@@ -37,6 +37,7 @@ resgen/
 │
 ├── venv/ 
 ├── requirements.txt
+├── .env
 ├── .gitignore
 └── run.py
 ```

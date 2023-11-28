@@ -4,36 +4,36 @@
         <div class="data-form login-form">
             <div class="card-body">
                 <form id="generateForm" method="post" class="form-floating" onsubmit="showLoadingMessage()">
-                    <h2 class="card-title text-center">Generate Resume</h2>
+                    <h2 class="card-title text-center">Generowanie CV</h2>
                     {{ form.hidden_tag() }}
                     <div class="form-group">
-                        {{ form.linkedin_url.label }} <span class="text-danger">*</span><br>
+                        URL profilu linkedIn <span class="text-danger">*</span><br>
                         {{ form.linkedin_url(class="form-control wide-input", placeholder="www.linkedin.com/in/your-name-886732123") }}
                         {% for error in form.linkedin_url.errors %}
-                            <small class="form-text text-muted">(required)</small>
+                            <small class="form-text text-muted">(wymagane)</small>
                         {% endfor %}
                     </div>
                     <div class="form-group">
-                        {{ form.full_name.label }} <span class="text-danger">*</span><br>
-                        {{ form.full_name(class="form-control wide-input", placeholder="Full Name") }}
+                        {{ "Imię i Nazwisko" }} <span class="text-danger">*</span><br>
+                        {{ form.full_name(class="form-control wide-input", placeholder="Imię i Nazwisko") }}
                         {% for error in form.full_name.errors %}
-                            <small class="form-text text-muted">(required)</small>
+                            <small class="form-text text-muted">(wymagane)</small>
                         {% endfor %}
                     </div>
 
                     <div class="form-group">
                         {{ form.email.label }} <span class="text-danger">*</span><br>
-                        {{ form.email(class="form-control wide-input", placeholder="your.mail@mail.com") }}
+                        {{ form.email(class="form-control wide-input", placeholder="mail@mail.com") }}
                         {% for error in form.email.errors %}
-                            <small class="form-text text-muted">(required)</small>
+                            <small class="form-text text-muted">(wymagane)</small>
                         {% endfor %}
                     </div>
 
                     <div class="form-group">
-                        {{ form.phone_number.label }} <span class="text-danger">*</span><br>
+                        Numer telefonu <span class="text-danger">*</span><br>
                         {{ form.phone_number(class="form-control wide-input", placeholder="+00 123123123") }}
                         {% for error in form.phone_number.errors %}
-                            <small class="form-text text-muted">(required)</small>
+                            <small class="form-text text-muted">(wymagane)</small>
                         {% endfor %}
                     </div>
 
@@ -43,7 +43,7 @@
                     </div>
 
                     <div class="form-group">
-                        {{ form.personal_website.label }}<br>
+                        Osobista witryna <br>
                         {{ form.personal_website(class="form-control wide-input", placeholder="ww.yourdomain.com") }}
                     </div>
 
@@ -53,10 +53,10 @@
                     </div>
 
                     <div class="form-group">
-                        {{ form.job_description.label }} <span class="text-danger">*</span><br>
-                        {{ form.job_description(class="form-control wide-input", placeholder="Job Description") }}
+                        Opis stanowiska <span class="text-danger">*</span><br>
+                        {{ form.job_description(class="form-control wide-input", placeholder="Opis stanowiska pracy") }}
                         {% for error in form.job_description.errors %}
-                            <small class="form-text text-muted">(required)</small>
+                            <small class="form-text text-muted">(wymagane)</small>
                         {% endfor %}
                     </div>
 
@@ -65,9 +65,8 @@
                     </div>
                 </form>
                 <div id="loadingMessage" style="display: none;">
-                    <!-- <img src="{{ url_for('static', filename='RESGEN_IO.png') }}" alt="Logo" class="logo"> -->
                     <div class="loader"></div>
-                    <p>generating your <b>CV</b>📝</p>
+                    <p>generujemy twoje <b>CV</b>📝</p>
                 </div>    
             </div>
         </div>

@@ -2,15 +2,15 @@
 
 {% block content %}
 <div class="archive">
-    <h2>Resume Archive</h2>
+    <h2>Archiwum</h2>
     <ul class="resume-list">
         {% for resume in resume_list %}
             <li>
-                <strong>Summary:</strong> {{ resume.summary }}<br>
-                <a href="{{ url_for('main.preview', resume_id=resume.id) }}">View Full Resume</a>
+                <strong>Podsumownie:</strong> {{ resume.summary }}<br>
+                <a href="{{ url_for('main.preview', resume_id=resume.id) }}">Zobacz CV</a>
             </li>
         {% else %}
-            <li>No resumes available.</li>
+            <li>Brak dostępnych CV.</li>
         {% endfor %}
     </ul>
 </div>

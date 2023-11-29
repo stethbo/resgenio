@@ -52,22 +52,6 @@ def log_in_vol_2(driver):
     return driver
 
 
-def log_in_vol_3(driver):
-    
-    username_input = driver.find_element(By.ID, 'session_key')
-    password_input = driver.find_element(By.ID, 'session_password')
-    login_button = driver.find_element(By.XPATH, '//*[@id="main-content"]/section[1]/div/div/form/div[2]/button')
-    logger.info("Found log in field on pop up🍾")
-    username_input.send_keys(USERNAME)
-    password_input.send_keys(PASSWORD)
-    logger.info('Keys sent to form🔑')
-    login_button.click()
-    time.sleep(1)
-    print("log in method 3")
-
-    return driver
-
-
 def get_page_source(user_url: str):
     options = Options()
     options.add_argument("--headless=new")
@@ -82,12 +66,7 @@ def get_page_source(user_url: str):
             driver = log_in_vol_2(driver)
         except:
             logger.warning('Could not log in with XPATHS')
-            try:
-                driver = log_in_vol_3(driver)
-            except:
-                logger.warning('Could not find IDs session_key session_password')
-                driver.close()
-                sys.exit()
+            sys.exit()
 
     driver.get(user_url)
     time.sleep(2)

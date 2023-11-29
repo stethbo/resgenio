@@ -1,8 +1,6 @@
-import os
 import tempfile
-import pdfkit
 import logging
-from flask import Blueprint, render_template, redirect, url_for, flash, send_file, send_from_directory, make_response
+from flask import Blueprint, render_template, redirect, url_for, flash, send_file, make_response
 from flask_login import login_user, logout_user, login_required, current_user
 import markdown
 from weasyprint import HTML

@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
-    <div class="row h-100 justify-content-center align-items-center">
+    <div class="row w-100 justify-content-center align-items-center">
         <div class="data-form login-form">
-            <div class="card-body">
+            <div class="card body">
                 <form id="generateForm" method="post" class="form-floating" onsubmit="showLoadingMessage()">
                     <h2 class="card-title text-center">Generate Resume</h2>
                     {{ form.hidden_tag() }}
@@ -56,7 +56,7 @@
                         {{ form.job_description.label }} <span class="text-danger">*</span><br>
                         {{ form.job_description(class="form-control wide-input", placeholder="Job Description") }}
                         {% for error in form.job_description.errors %}
-                            <small class="form-text text-muted">(required)</small>
+                            <large class="form-text text-muted">(required)</large>
                         {% endfor %}
                     </div>
 

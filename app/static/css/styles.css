@@ -52,6 +52,10 @@ h1 {
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 }
 
+.btn:click{
+    background-color: #003584;
+}
+
 ul {
     width: 100%;
     max-width: 400px;
@@ -184,6 +188,8 @@ li:last-child {
     text-decoration: none;
     border-radius: 5px;
     font-weight: bold;
+    align-items: center;
+    vertical-align: middle;
 }
 
 .home-button:hover {

@@ -8,3 +8,20 @@ function showLoadingMessage() {
     // showing the loading message
     loadingMessage.style.display = 'block';
 }
+
+function sendFeedback(feedback, resumeId) {
+    fetch('/feedback', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ resume_id: resumeId, feedback: feedback })
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('feedbackMessage').innerText = 'Thanks for your feedback!';
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+}

@@ -20,13 +20,13 @@ class User(UserMixin, db.Model):
 class UserDetails(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    linkedin_url = db.Column(db.String(100), nullable=False)
     full_name = db.Column(db.String(100))
     email = db.Column(db.String(100))
     phone_number = db.Column(db.String(20))
     github = db.Column(db.String(100), nullable=True)
     personal_website = db.Column(db.String(100), nullable=True)
     twitter = db.Column(db.String(100), nullable=True)
-    job_description = db.Column(db.Text, nullable=True)
 
     user = db.relationship('User', backref=db.backref('details', lazy=True))
 
@@ -34,7 +34,9 @@ class UserDetails(db.Model):
 class Resumes(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    job_description = db.Column(db.Text, nullable=True)
     content = db.Column(db.Text, nullable=False)  # For resume content
     summary = db.Column(db.String(255), nullable=False)  # For summary of the resume
+    feedback = db.Column(db.Integer, nullable=True)
 
     user = db.relationship('User', backref=db.backref('resumes', lazy=True))

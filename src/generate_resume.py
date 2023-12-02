@@ -72,9 +72,12 @@ def chain_prompt_llm(messages, model):
 
 
 def postprocess(resume_content):
-    markdown_content = re.search(r'(?s)```markdown|md\s*(.*?)\s*```', resume_content)
-    if markdown_content:
+    markdown_content = re.search(r'(?s)```markdown|md|python\s*(.*?)\s*```', resume_content)
+    if markdown_content is not None:
         resume_content = markdown_content.group(1)
+    
+    resume_content = re.sub(r'markdown', '', resume_content)
+    resume_content = re.sub(r'```', '', resume_content)
     resume_content = re.sub(r'\:[a-z_]*\:', '', resume_content)
     resume_content = re.sub(r':\W+:', '', resume_content)
     return resume_content
@@ -110,3 +113,19 @@ def get_resume_content(user_data: dict, test=False) -> tuple([str, str]):
         resume_content = postprocess(resume_content)
 
     return resume_content, summary
+
+
+def regenerate_resume_content(user_data:dict, old_resume_content: str, job_desc:str):
+
+    linkedin_data = get_linkedin_data(user_data['linkedin_url'])
+    personal_info = convert_user_data_to_string(user_data)
+    
+    # prompt = create_prompt(job_desc, personal_info, linkedin_data)
+    prompt = f"Given this job description: \"{job_desc}\"\
+    and follwoing candidate information: \"'{personal_info}\n{linkedin_data}'\n\"\
+        you have provided following resume:\n```{old_resume_content}```\n\
+        Please improve it and retur new version in markdown format."
+    
+    new_resume = prompt_llm(prompt, model=MODEL)
+
+    return new_resume

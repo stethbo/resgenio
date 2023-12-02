@@ -1,7 +1,7 @@
 import tempfile
 import logging
-from flask import (Blueprint, render_template, redirect, url_for, flash, send_file,
-                   make_response, request, jsonify)
+from flask import Blueprint, request, session
+from flask import render_template, redirect, url_for, flash, send_file, make_response, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
 import markdown
 from weasyprint import HTML
@@ -9,7 +9,7 @@ from weasyprint import HTML
 from . import db, bcrypt, login_manager
 from .models import User, UserDetails, Resumes
 from .forms import LoginForm, RegistrationForm, ResumeForm
-from src.generate_resume import get_resume_content
+from src.generate_resume import get_resume_content, regenerate_resume_content
 
 
 main_blueprint = Blueprint('main', __name__)
@@ -67,6 +67,7 @@ def generate():
     form = ResumeForm(obj=user_details)
 
     if form.validate_on_submit():
+
         if not user_details:
             user_details = UserDetails(user_id=current_user.id)
             db.session.add(user_details)
@@ -79,7 +80,10 @@ def generate():
 
 
         logger.info(f'User id🆔: {current_user.id}')
-        resume = Resumes(user_id=current_user.id, content=resume_content, summary=resume_title)
+        resume = Resumes(
+            user_id=current_user.id, job_description=form.data["job_description"],
+            content=resume_content, summary=resume_title
+            )
         db.session.add(resume)
         db.session.commit()
         generated_id = resume.id
@@ -168,6 +172,25 @@ def handle_feedback():
     db.session.commit()
 
     return jsonify({"message": "Feedback received"})
+
+
+@main_blueprint.route('/regenerate/<int:resume_id>', methods=['POST', 'GET'])
+@login_required
+def regenerate(resume_id:int):
+
+    resume = Resumes.query.get_or_404(resume_id)
+    user_data = UserDetails.query.get_or_404(current_user.id)
+    user_data_dict = {c.name: getattr(user_data, c.name) for c in user_data.__table__.columns}
+    new_resume_content = regenerate_resume_content(user_data_dict,
+                                                   resume.content,
+                                                   resume.job_description)
+    resume.content = new_resume_content
+    db.session.commit()
+
+    flash('Resume generated successfully.')
+    logger.info(f"Resume regenerated successfully🔥")
+    return redirect(url_for('main.preview', resume_id=resume.id))
+
 
 
 @main_blueprint.route('/archive')

@@ -16,6 +16,12 @@
     <h4>
         Don't like what you see?
         <br>
-        <button class="btn">Regenerate</button>
+        <form id="reGenerateForm" action="{{ url_for('main.regenerate', resume_id=resume_id) }}" method="post" onsubmit="showLoadingMessage()">
+            <input class="btn" type="submit" value="Regenerate">
+        </form>
     </h4>
+    <div id="loadingMessage" style="display: none;">
+        <div class="loader"></div>
+        <p>Improving your <b>CV</b>📝</p>
+    </div>
     {% endblock %}

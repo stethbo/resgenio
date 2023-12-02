@@ -1,6 +1,7 @@
 import tempfile
 import logging
-from flask import Blueprint, render_template, redirect, url_for, flash, send_file, make_response
+from flask import (Blueprint, render_template, redirect, url_for, flash, send_file,
+                   make_response, request, jsonify)
 from flask_login import login_user, logout_user, login_required, current_user
 import markdown
 from weasyprint import HTML
@@ -102,7 +103,6 @@ def preview(resume_id):
 
     with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as temp:
         # Create a path for the temp file to send it
-        temp_file_path = temp.name
         HTML(string=html_content).write_pdf(temp.name)
 
     # Render the template with the filename
@@ -144,7 +144,30 @@ def download_resume(resume_id):
         HTML(string=html_content).write_pdf(temp.name)
 
     # Render the template with the filename
-    return make_response(send_file(temp_file_path, as_attachment=True, download_name=f"{user_name.replace(' ', '_').lower()}_resume_{resume_id}.pdf"))
+    return make_response(
+        send_file(
+            temp_file_path,
+            as_attachment=True,
+            download_name=f"{user_name.replace(' ', '_').lower()}_resume_{resume_id}.pdf"
+            ))
+
+
+@main_blueprint.route('/feedback', methods=['POST'])
+@login_required
+def handle_feedback():
+    logger.info("HANDLING FEEDBACK🔙")
+    data = request.get_json()
+    resume_id = data['resume_id']
+    user_feedback = 1 if data['feedback'] == 'like' else 0
+
+    # Find the resume and update feedback
+    resume = Resumes.query.get_or_404(resume_id)
+    resume.feedback = user_feedback
+    
+    # Commit the changes to the database
+    db.session.commit()
+
+    return jsonify({"message": "Feedback received"})
 
 
 @main_blueprint.route('/archive')

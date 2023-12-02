@@ -36,5 +36,6 @@ class Resumes(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     content = db.Column(db.Text, nullable=False)  # For resume content
     summary = db.Column(db.String(255), nullable=False)  # For summary of the resume
+    feedback = db.Column(db.Integer, nullable=True)
 
     user = db.relationship('User', backref=db.backref('resumes', lazy=True))

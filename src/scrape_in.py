@@ -9,6 +9,10 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from datetime import datetime
+from sqlalchemy.orm.exc import NoResultFound
+
+from app.models import db, LinkedinData
 
 logger = logging.getLogger(__file__)
 
@@ -131,20 +135,23 @@ def generate_page_paragraphs(profile_url: str):
     return user_info
 
 
+
+
 def get_linkedin_data(user_url: str) -> str:
     user_id = re.sub(r'/$', '', user_url)  # deleting the / if exist at the end of a string
     user_id = user_id.split('/')[-1]  # getting the user ID from URL
     logger.info(f"Working on user ID: {user_id}")
-    paragraphs_file = os.path.join("data", f"user_info_{user_id}.txt")
 
-    if not os.path.exists(path=paragraphs_file):
-
+    try:
+        # Query the database for the URL
+        record = LinkedinData.query.filter_by(url=user_url).one()
+        user_info = record.profile_data
+    except NoResultFound:
+        # If not found, scrape and add to database
         user_info = generate_page_paragraphs(profile_url=user_url)
-
-        with open(paragraphs_file, 'w') as file_:
-            file_.write(user_info)
-    else:
-        user_info = open(paragraphs_file, 'r').read()
+        new_record = LinkedinData(url=user_url, profile_data=user_info, timestamp=datetime.now())
+        db.session.add(new_record)
+        db.session.commit()
 
     return user_info
 

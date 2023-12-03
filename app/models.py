@@ -40,3 +40,11 @@ class Resumes(db.Model):
     feedback = db.Column(db.Integer, nullable=True)
 
     user = db.relationship('User', backref=db.backref('resumes', lazy=True))
+
+
+class LinkedinData(db.Model):
+    url = db.Column(db.String(100), db.ForeignKey('user_details.linkedin_url'), nullable=False, primary_key=True)
+    profile_data = db.Column(db.String(), nullable=False)
+    timestamp = db.Column(db.DateTime, default=db.func.current_timestamp(), nullable=False)
+
+    user_details = db.relationship('UserDetails', backref=db.backref('linkedin_data', lazy=True))

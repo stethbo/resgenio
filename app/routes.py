@@ -76,7 +76,7 @@ def generate():
         db.session.commit()
 
         # Generate the resume content
-        resume_content, resume_title = get_resume_content(form.data, test=False)
+        resume_content, resume_title = get_resume_content(form.data)
 
 
         logger.info(f'User id🆔: {current_user.id}')

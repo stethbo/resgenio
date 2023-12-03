@@ -2,10 +2,10 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div class="row h-100 justify-content-center align-items-center">
+    <div class="form-ceter">
         <div class="login-form">
             <div class="card-body">
-                <h2 class="card-title text-center">Zaloguj się</h2>
+                <h2 class="card-title form-ceter">Zaloguj się</h2>
                 <form action="/login" class="form-floating" method="POST">
                     {{ form.hidden_tag() }}
                     <div class="form-group">
@@ -19,12 +19,12 @@
                             {{ form.remember }} Zapamiętaj mnie
                         </label>
                     </div>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <button class="btn btn-primary btn-block" type="submit">Zaloguj</button>
+                    <div class="form-ceter">
+                        <button class="btn btn-primary btn-block form-ceter" type="submit">Zaloguj</button>
                     </div>
                 </form>
             </div>
-            <div class="card-footer text-center">
+            <div class="card-footer form-ceter">
                 Nie masz jeszcze konta? <a href="/register">Zarejestruj się</a>
             </div>
         </div>

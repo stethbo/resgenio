@@ -3,7 +3,7 @@
 
     {% block content %}
         <form action="{{ url_for('main.generate') }}" method="post">
-            <input class="btn" type="submit" value="Generate Resume">
+            <input class="btn" type="submit" value="Generuj CV">
         </form>
-        <a class="btn" href="{{ url_for('main.archive') }}">View Archive</a>
+        <a class="btn" href="{{ url_for('main.archive') }}">Archiwum</a>
     {% endblock %}

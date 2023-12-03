@@ -11,11 +11,11 @@
                         {{ form.linkedin_url(class="form-control wide-input", placeholder="www.linkedin.com/in/your-name-886732123") }}
                     </div>
                     <div class="form-group">
-                        {{ form.full_name.label }}
+                        {{ "Imię i Nazwisko" }}
                         <span class="text-danger"></span><br>
                         {{ form.full_name(class="form-control wide-input", placeholder="Full Name") }}
                         {% for error in form.full_name.errors %}
-                            <small class="form-text text-muted">(required)</small>
+                            <small class="form-text text-muted">(wymagane)</small>
                         {% endfor %}
                     </div>
 
@@ -24,16 +24,17 @@
                         <span class="text-danger"></span><br>
                         {{ form.email(class="form-control wide-input", placeholder="your.mail@mail.com") }}
                         {% for error in form.email.errors %}
-                            <small class="form-text text-muted">(required)</small>
+                            <small class="form-text text-muted">(wymagane)</small>
                         {% endfor %}
                     </div>
 
                     <div class="form-group">
-                        {{ form.phone_number.label }}
+                        Numer telefonu
                         <span class="text-danger"></span><br>
+
                         {{ form.phone_number(class="form-control wide-input", placeholder="+00 123123123") }}
                         {% for error in form.phone_number.errors %}
-                            <small class="form-text text-muted">(required)</small>
+                            <small class="form-text text-muted">(wymagane)</small>
                         {% endfor %}
                     </div>
 
@@ -43,7 +44,7 @@
                     </div>
 
                     <div class="form-group">
-                        {{ form.personal_website.label }}<br>
+                        Osobista witryna <br>
                         {{ form.personal_website(class="form-control wide-input", placeholder="ww.yourdomain.com") }}
                     </div>
 
@@ -53,7 +54,7 @@
                     </div>
 
                     <div class="form-group">
-                        {{ form.job_description.label }} 
+                        Opis stanowiska
                         <!-- {% for error in form.job_description.errors %}
                             <large class="form-text text-muted">(required)</large>
                         {% endfor %} -->
@@ -66,13 +67,13 @@
                         {{ form.submit(class="btn btn-primary btn-block") }}
                     </div>
                 </form>
-                   
+
             </div>
             <div id="loadingMessage" style="display: none;" class="form-ceter">
                 <div class="loader">
                     <img src="{{ url_for('static', filename='images/resgen_logo_no_bg.png') }}" width="121px">
                 </div>
-                <p>generating your <b>CV</b>📝</p>
+                <p>generujemy twoje <b>CV</b>📝</p>
             </div> 
         </div>
     </div>

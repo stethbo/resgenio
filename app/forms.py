@@ -14,11 +14,11 @@ class RegistrationForm(FlaskForm):
     password = PasswordField('Password', validators=[
         DataRequired(),
         Length(min=6),
-        EqualTo('confirm', message='Passwords must match.')
+        EqualTo('confirm', message='Hasła muszą być takie same.')
     ])
     confirm = PasswordField('Confirm Password')
     remember = BooleanField('Remember Me')
-    submit = SubmitField('Register')
+    submit = SubmitField('Zarejestruj')
 
 
 class ResumeForm(FlaskForm):

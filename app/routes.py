@@ -174,7 +174,7 @@ def handle_feedback():
     return jsonify({"message": "Feedback received"})
 
 
-@main_blueprint.route('/regenerate/<int:resume_id>', methods=['POST', 'GET'])
+@main_blueprint.route('/regenerate/<int:resume_id>', methods=['POST'])
 @login_required
 def regenerate(resume_id:int):
 

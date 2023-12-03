@@ -88,22 +88,71 @@ li:last-child {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.data-form {
+.custom-wide-form {
+    max-width: 1024px;
+}
+
+.user-data-block {
+    width: 100%; /* Ensures the block takes full width */
+    display: flex;
+    justify-content: center;
+}
+
+.text-ceter {
+    display: flex;       /* Enables Flexbox layout */
+    justify-content: center; /* Horizontally centers the content */
+    align-items: center; 
+}
+
+.form-ceter {
+    display: flex;       /* Enables Flexbox layout */
+    justify-content: center; /* Horizontally centers the content */
+    align-items: center; 
+}
+
+/* .data-form {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
-    /* max-width: 1080px; */
     margin-top: 30px;
     background: #fff;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}   
+} */
+
+.data-form {
+    width: 100%; /* Adjust width to take full space of .user-data-block */
+    display: flex;
+    flex-direction: column; /* Stack children vertically */
+    align-items: center; /* Center children horizontally */
+    margin-top: 30px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
 
 .wide-input {
-    width: 60%;
+    width: 100%;
+    max-width: 700px;
     font-size: small;
+}
+
+.form-group {
+    width: 100%; /* Ensure container takes full width */
+    display: flex;
+    flex-direction: column;
+    align-items: left; /* Center content */
+}
+
+.form-center {
+    width: 100%; /* Ensure container takes full width */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center content */
 }
 
 .login-form .form-control {
@@ -131,6 +180,16 @@ li:last-child {
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
     /* Use !important to override Bootstrap default */
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+#preview {
+    display: flex; /* Enable Flexbox */
+    flex-direction: column; /* Stack children vertically */
+    align-items: center; /* Center children horizontally */
+    justify-content: center; /* Center children vertically if needed */
+    text-align: center; /* Center text for inline or inline-block elements */
+    width: 100%; /* Set the width of the div to fill its container */
+    margin: auto; /* Optional: Center the div itself if it doesn't fill its container */
 }
 
 .card {
@@ -197,8 +256,8 @@ li:last-child {
 }
 
 .loader {
-    border: 16px solid #f3f3f3; /* Light grey */
-    border-top: 16px solid #3498db; /* Blue */
+    border: 16px transparent;
+    border-top: 16px transparent;
     border-radius: 50%;
     width: 120px;
     height: 120px;

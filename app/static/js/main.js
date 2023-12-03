@@ -1,9 +1,13 @@
 function showLoadingMessage() {
     var form = document.getElementById('generateForm');
+    var previewElemets = document.getElementById('preview');
     var loadingMessage = document.getElementById('loadingMessage');
 
     // hide the form
     form.style.display = 'none';
+    if (previewElemets) {
+        previewElemets.style.display = 'none'
+    }
 
     // showing the loading message
     loadingMessage.style.display = 'block';

@@ -72,11 +72,14 @@ def chain_prompt_llm(messages, model):
 
 
 def postprocess(resume_content):
-    markdown_content = re.search(r'(?s)```markdown|md|python\s*(.*?)\s*```', resume_content)
-    if markdown_content is not None:
+    markdown_content = re.search(r'.*```markdown(.*?)```', resume_content, re.DOTALL)
+    if markdown_content:
         resume_content = markdown_content.group(1)
-    
-    resume_content = re.sub(r'markdown', '', resume_content)
+    else:
+        markdown_content = re.search(r'.*```md(.*?)```', resume_content, re.DOTALL)
+        if markdown_content:
+            resume_content = markdown_content.group(1)
+
     resume_content = re.sub(r'```', '', resume_content)
     resume_content = re.sub(r'\:[a-z_]*\:', '', resume_content)
     resume_content = re.sub(r':\W+:', '', resume_content)
@@ -110,9 +113,13 @@ def get_resume_content(user_data: dict, test=False) -> tuple([str, str]):
             logger.error(f'🫨Error occured while prompting LLM:\n{api_error}')
             resume_content = ''
 
-        resume_content = postprocess(resume_content)
+        try:
+            clean_resume_content = postprocess(resume_content)
+        except Exception as e:
+            logger.error(f'Error with postprocessing: {e}')
+            clean_resume_content = resume_content
 
-    return resume_content, summary
+    return clean_resume_content, summary
 
 
 def regenerate_resume_content(user_data:dict, old_resume_content: str, job_desc:str):
@@ -128,4 +135,10 @@ def regenerate_resume_content(user_data:dict, old_resume_content: str, job_desc:
     
     new_resume = prompt_llm(prompt, model=MODEL)
 
-    return new_resume
+    try:
+        clean_resume_content = postprocess(new_resume)
+    except Exception as e:
+        logger.error(f'Error with postprocessing: {e}')
+        clean_resume_content = new_resume
+
+    return clean_resume_content

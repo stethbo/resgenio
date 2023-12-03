@@ -22,12 +22,12 @@ class RegistrationForm(FlaskForm):
 
 
 class ResumeForm(FlaskForm):
-    linkedin_url = StringField('LinkedIn Profile URL', validators=[DataRequired()]) 
-    full_name = StringField('Full Name', validators=[DataRequired()])
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    phone_number = StringField('Phone Number', validators=[DataRequired()])
-    github = StringField('GitHub', validators=[Optional()])
-    personal_website = StringField('Personal Website', validators=[Optional()])
-    twitter = StringField('Twitter', validators=[Optional()])
-    job_description = TextAreaField('Job Description', validators=[DataRequired()])
-    submit = SubmitField('Generuj CV')
+    linkedin_url = StringField('LinkedIn Profile URL (required)', validators=[DataRequired()]) 
+    full_name = StringField('Full Name (required)', validators=[DataRequired()])
+    email = StringField('Email (required)', validators=[DataRequired(), Email()])
+    phone_number = StringField('Phone Number (required)', validators=[DataRequired()])
+    github = StringField('GitHub (optional)', validators=[Optional()])
+    personal_website = StringField('Personal Website (optional)', validators=[Optional()])
+    twitter = StringField('Twitter (optional)', validators=[Optional()])
+    job_description = TextAreaField('Job Description (required)', validators=[DataRequired()])
+    submit = SubmitField('Generate Resume')

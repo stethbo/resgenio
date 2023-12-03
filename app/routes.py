@@ -1,8 +1,7 @@
-import os
 import tempfile
-import pdfkit
 import logging
-from flask import Blueprint, render_template, redirect, url_for, flash, send_file, send_from_directory, make_response
+from flask import Blueprint, request, session
+from flask import render_template, redirect, url_for, flash, send_file, make_response, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
 import markdown
 from weasyprint import HTML
@@ -10,7 +9,7 @@ from weasyprint import HTML
 from . import db, bcrypt, login_manager
 from .models import User, UserDetails, Resumes
 from .forms import LoginForm, RegistrationForm, ResumeForm
-from src.generate_resume import get_resume_content
+from src.generate_resume import get_resume_content, regenerate_resume_content
 
 
 main_blueprint = Blueprint('main', __name__)
@@ -68,6 +67,7 @@ def generate():
     form = ResumeForm(obj=user_details)
 
     if form.validate_on_submit():
+
         if not user_details:
             user_details = UserDetails(user_id=current_user.id)
             db.session.add(user_details)
@@ -80,7 +80,10 @@ def generate():
 
 
         logger.info(f'User id🆔: {current_user.id}')
-        resume = Resumes(user_id=current_user.id, content=resume_content, summary=resume_title)
+        resume = Resumes(
+            user_id=current_user.id, job_description=form.data["job_description"],
+            content=resume_content, summary=resume_title
+            )
         db.session.add(resume)
         db.session.commit()
         generated_id = resume.id
@@ -104,7 +107,6 @@ def preview(resume_id):
 
     with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as temp:
         # Create a path for the temp file to send it
-        temp_file_path = temp.name
         HTML(string=html_content).write_pdf(temp.name)
 
     # Render the template with the filename
@@ -146,7 +148,49 @@ def download_resume(resume_id):
         HTML(string=html_content).write_pdf(temp.name)
 
     # Render the template with the filename
-    return make_response(send_file(temp_file_path, as_attachment=True, download_name=f"{user_name.replace(' ', '_').lower()}_resume_{resume_id}.pdf"))
+    return make_response(
+        send_file(
+            temp_file_path,
+            as_attachment=True,
+            download_name=f"{user_name.replace(' ', '_').lower()}_resume_{resume_id}.pdf"
+            ))
+
+
+@main_blueprint.route('/feedback', methods=['POST'])
+@login_required
+def handle_feedback():
+    logger.info("HANDLING FEEDBACK🔙")
+    data = request.get_json()
+    resume_id = data['resume_id']
+    user_feedback = 1 if data['feedback'] == 'like' else 0
+
+    # Find the resume and update feedback
+    resume = Resumes.query.get_or_404(resume_id)
+    resume.feedback = user_feedback
+    
+    # Commit the changes to the database
+    db.session.commit()
+
+    return jsonify({"message": "Feedback received"})
+
+
+@main_blueprint.route('/regenerate/<int:resume_id>', methods=['POST'])
+@login_required
+def regenerate(resume_id:int):
+
+    resume = Resumes.query.get_or_404(resume_id)
+    user_data = UserDetails.query.get_or_404(current_user.id)
+    user_data_dict = {c.name: getattr(user_data, c.name) for c in user_data.__table__.columns}
+    new_resume_content = regenerate_resume_content(user_data_dict,
+                                                   resume.content,
+                                                   resume.job_description)
+    resume.content = new_resume_content
+    db.session.commit()
+
+    flash('Resume generated successfully.')
+    logger.info(f"Resume regenerated successfully🔥")
+    return redirect(url_for('main.preview', resume_id=resume.id))
+
 
 
 @main_blueprint.route('/archive')

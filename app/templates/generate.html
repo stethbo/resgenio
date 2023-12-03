@@ -1,36 +1,37 @@
 {% extends "base.html" %}
 {% block content %}
-    <div class="row h-100 justify-content-center align-items-center">
-        <div class="data-form login-form">
-            <div class="card-body">
+    <div class="user-data-block">
+        <div class="data-form login-form custom-wide-form">
+            <div class="card body">
                 <form id="generateForm" method="post" class="form-floating" onsubmit="showLoadingMessage()">
-                    <h2 class="card-title text-center">Generowanie CV</h2>
+                    <h2 class="card-title text-center form-ceter">Generate Resume</h2>
                     {{ form.hidden_tag() }}
                     <div class="form-group">
-                        URL profilu linkedIn <span class="text-danger">*</span><br>
+                    </span><br>
                         {{ form.linkedin_url(class="form-control wide-input", placeholder="www.linkedin.com/in/your-name-886732123") }}
-                        {% for error in form.linkedin_url.errors %}
-                            <small class="form-text text-muted">(wymagane)</small>
-                        {% endfor %}
                     </div>
                     <div class="form-group">
-                        {{ "Imię i Nazwisko" }} <span class="text-danger">*</span><br>
-                        {{ form.full_name(class="form-control wide-input", placeholder="Imię i Nazwisko") }}
+                        {{ "Imię i Nazwisko" }}
+                        <span class="text-danger"></span><br>
+                        {{ form.full_name(class="form-control wide-input", placeholder="Full Name") }}
                         {% for error in form.full_name.errors %}
                             <small class="form-text text-muted">(wymagane)</small>
                         {% endfor %}
                     </div>
 
                     <div class="form-group">
-                        {{ form.email.label }} <span class="text-danger">*</span><br>
-                        {{ form.email(class="form-control wide-input", placeholder="mail@mail.com") }}
+                        {{ form.email.label }}
+                        <span class="text-danger"></span><br>
+                        {{ form.email(class="form-control wide-input", placeholder="your.mail@mail.com") }}
                         {% for error in form.email.errors %}
                             <small class="form-text text-muted">(wymagane)</small>
                         {% endfor %}
                     </div>
 
                     <div class="form-group">
-                        Numer telefonu <span class="text-danger">*</span><br>
+                        Numer telefonu
+                        <span class="text-danger"></span><br>
+
                         {{ form.phone_number(class="form-control wide-input", placeholder="+00 123123123") }}
                         {% for error in form.phone_number.errors %}
                             <small class="form-text text-muted">(wymagane)</small>
@@ -53,22 +54,27 @@
                     </div>
 
                     <div class="form-group">
-                        Opis stanowiska <span class="text-danger">*</span><br>
-                        {{ form.job_description(class="form-control wide-input", placeholder="Opis stanowiska pracy") }}
-                        {% for error in form.job_description.errors %}
-                            <small class="form-text text-muted">(wymagane)</small>
-                        {% endfor %}
+                        Opis stanowiska
+                        <!-- {% for error in form.job_description.errors %}
+                            <large class="form-text text-muted">(required)</large>
+                        {% endfor %} -->
+                        <span class="text-danger"></span><br>
+                        {{ form.job_description(class="form-control wide-input", placeholder="Job Description") }}
+                        
                     </div>
 
-                    <div class="d-flex justify-content-between align-items-center">
+                    <div class="form-ceter">
                         {{ form.submit(class="btn btn-primary btn-block") }}
                     </div>
                 </form>
-                <div id="loadingMessage" style="display: none;">
-                    <div class="loader"></div>
-                    <p>generujemy twoje <b>CV</b>📝</p>
-                </div>    
+
             </div>
+            <div id="loadingMessage" style="display: none;" class="form-ceter">
+                <div class="loader">
+                    <img src="{{ url_for('static', filename='images/resgen_logo_no_bg.png') }}" width="121px">
+                </div>
+                <p>generujemy twoje <b>CV</b>📝</p>
+            </div> 
         </div>
     </div>
 {% endblock %}

@@ -6,9 +6,9 @@
 Engineering thesis project by Stefan Borek
 
 
-### **Project structure**
+### **Struktura projektu**
 
-```
+```mermaid
 resgen/
 │
 ├── app/
@@ -42,4 +42,5 @@ resgen/
 ├── .env
 ├── .gitignore
 └── run.py
+
 ```

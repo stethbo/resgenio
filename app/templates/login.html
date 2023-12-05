@@ -2,30 +2,30 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div class="row h-100 justify-content-center align-items-center">
+    <div class="form-ceter">
         <div class="login-form">
             <div class="card-body">
-                <h2 class="card-title text-center div-center">Login to Your Account</h2>
+                <h2 class="card-title div-center">Zaloguj się</h2>
                 <form action="/login" class="form-floating" method="POST">
                     {{ form.hidden_tag() }}
                     <div class="form-group">
-                        {{ form.username(class="form-control", placeholder="Username") }}
+                        {{ form.username(class="form-control", placeholder="Nazwa uytkownika") }}
                     </div>
                     <div class="form-group">
-                        {{ form.password(class="form-control", placeholder="Password") }}
+                        {{ form.password(class="form-control", placeholder="Hasło") }}
                     </div>
                     <div class="checkbox mb-3">
                         <label>
-                            {{ form.remember }} Remember me
+                            {{ form.remember }} Zapamiętaj mnie
                         </label>
                     </div>
-                    <div class="d-flex justify-content-between align-items-center div-center">
-                        <button class="btn btn-primary btn-block" type="submit">Login</button>
+                    <div class="div-center">
+                        <button class="btn btn-primary btn-block form-ceter" type="submit">Zaloguj</button>
                     </div>
                 </form>
             </div>
-            <div class="card-footer div-center">
-                Don't have an account? <a href="/register">Sign Up</a>
+            <div class="card-footer form-ceter">
+                Nie masz jeszcze konta? <a href="/register">Zarejestruj się</a>
             </div>
         </div>
     </div>

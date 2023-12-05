@@ -2,30 +2,30 @@
 
     {% block content %}
     <div id="preview" class="preview-div">
-        <h1>PDF Preview</h1>
+        <h1>Podgląd PDF</h1>
         <!-- Embed the PDF file for preview -->
         <iframe src="{{ url_for('main.pdf_preview', resume_id=resume_id) }}" width="600" height="500"></iframe>
         <br>
         <!-- Link to download the PDF file -->
-        <a href="{{ url_for('main.download_resume', resume_id=resume_id) }}">Download PDF</a>
+        <a href="{{ url_for('main.download_resume', resume_id=resume_id) }}">Pobierz PDF</a>
         <h4>
-            Do you like it?
+            Co myślisz o tym CV?
             <button class="btn" onclick="sendFeedback('like', {{ resume_id }})">👍</button>
             <button class="btn" onclick="sendFeedback('dislike', {{ resume_id }})">👎</button>
         </h4>
         <p id="feedbackMessage"></p>
         <h4>
-            Don't like what you see?
+            Nie podoba Ci się?
             <br>
             <form id="generateForm" action="{{ url_for('main.regenerate', resume_id=resume_id) }}" method="post" onsubmit="showLoadingMessage()">
-                <input class="btn" type="submit" value="Regenerate">
+                <input class="btn" type="submit" value="Wygeneruj ponownie">
             </form>
         </h4>   
     </div>
-    <div id="loadingMessage" style="display: none;">
+    <div id="loadingMessage" style="display: none;" class="form-ceter">
         <div class="loader">
             <img src="{{ url_for('static', filename='images/resgen_logo_no_bg.png') }}" width="123px">
         </div>
-        <p>Improving your <b>CV</b>📝</p>
+        <p>Poprawiamy twoje <b>CV</b>📝</p>
     </div>
     {% endblock %}

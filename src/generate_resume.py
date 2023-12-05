@@ -106,7 +106,6 @@ def regenerate_resume_content(user_data:dict, old_resume_content: str, job_desc:
     linkedin_data = get_linkedin_data(user_data['linkedin_url'])
     personal_info = convert_user_data_to_string(user_data)
     
-    # prompt = create_prompt(job_desc, personal_info, linkedin_data)
     prompt = f"Given this job description: \"{job_desc}\"\
     and follwoing candidate information: \"'{personal_info}\n{linkedin_data}'\n\"\
         you have provided following resume:\n```{old_resume_content}```\n\

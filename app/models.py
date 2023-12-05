@@ -27,6 +27,7 @@ class UserDetails(db.Model):
     github = db.Column(db.String(100), nullable=True)
     personal_website = db.Column(db.String(100), nullable=True)
     twitter = db.Column(db.String(100), nullable=True)
+    additionals = db.Column(db.String(1000), nullable=True)
 
     user = db.relationship('User', backref=db.backref('details', lazy=True))
 

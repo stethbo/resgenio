@@ -5,7 +5,7 @@
     <div class="row h-100 justify-content-center align-items-center">
         <div class="login-form">
             <div class="card-body">
-                <h2 class="card-title form-ceter">Zarejestruj się</h2>
+                <h2 class="card-title div-center">Zarejestruj się</h2>
                 <form action="/register" method="post" class="form-floating" aria-placeholder="Zarejestruj">
                     {{ form.hidden_tag() }}
                     <div class="form-group">
@@ -22,11 +22,12 @@
                             {{ form.remember }} Zapamiętaj mnie
                         </label>
                     </div>
-                    <div class="form-ceter">
+                    <div class="div-center">
                         {{ form.submit(class="btn btn-primary btn-block") }}
                     </div>
                 </form>
             </div>
+
             <div class="card-footer text-center">
                 Masz już konto? <a href="/login">Zaloguj</a>
             </div>

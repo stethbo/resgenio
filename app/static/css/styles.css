@@ -11,7 +11,7 @@ body {
     align-items: center;
     justify-content: center;
     height: 120%;
-    max-height: 120vh;
+    /* max-height: 500vh; */
     margin: 0 auto;
     padding-bottom: 10%;
     padding-top: 6%;
@@ -28,12 +28,12 @@ h1 {
     width: 60%;
     margin-bottom: 20px;
     margin-top: 10px;
-    border-radius: 8px;  /* This will give slightly rounded corners */
+    border-radius: 8px;
 }
 
 .btn {
     display: inline-block;
-    background-color: #0d6efd; /* LinkedIn Color */
+    background-color: #0d6efd;
     color: #fff;
     padding: 10px 20px;
     border: none;
@@ -89,51 +89,40 @@ li:last-child {
 }
 
 .custom-wide-form {
+    width: 80%;
     max-width: 1024px;
 }
 
 .user-data-block {
-    width: 100%; /* Ensures the block takes full width */
+    width: 100%;
     display: flex;
     justify-content: center;
+    max-width: 900px;
 }
 
 .text-ceter {
-    display: flex;       /* Enables Flexbox layout */
-    justify-content: center; /* Horizontally centers the content */
-    align-items: center; 
-}
-
-.form-ceter {
-    display: flex;       /* Enables Flexbox layout */
-    justify-content: center; /* Horizontally centers the content */
-    align-items: center; 
-}
-
-/* .data-form {
     display: flex;
     justify-content: center;
-    align-items: center;
-    width: 100%;
-    margin-top: 30px;
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-} */
+    align-items: center; 
+}
+
+.div-center {
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+}
 
 .data-form {
-    width: 100%; /* Adjust width to take full space of .user-data-block */
+    width: 90%;
     display: flex;
-    flex-direction: column; /* Stack children vertically */
-    align-items: center; /* Center children horizontally */
+    flex-direction: column;
+    align-items: center;
     margin-top: 30px;
     background: #fff;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-
 
 .wide-input {
     width: 100%;
@@ -141,18 +130,15 @@ li:last-child {
     font-size: small;
 }
 
-.form-group {
-    width: 100%; /* Ensure container takes full width */
-    display: flex;
-    flex-direction: column;
-    align-items: left; /* Center content */
+.long-text-input {
+    height: 8lh;
 }
 
-.form-center {
-    width: 100%; /* Ensure container takes full width */
+.form-group {
+    width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center; /* Center content */
+    align-items: left;
 }
 
 .login-form .form-control {
@@ -170,7 +156,6 @@ li:last-child {
     padding: 10px 20px;
     font-size: 1em;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    /* Use !important to override Bootstrap default */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
 }
 
@@ -178,7 +163,6 @@ li:last-child {
     background-color: #0b63e3;
     transform: translateY(-2px);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-    /* Use !important to override Bootstrap default */
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1) !important;
 }
 
@@ -196,7 +180,6 @@ li:last-child {
     align-items: center;
     width: 100%;
     border-radius: 8px;
-    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
 }
 
 .card-footer {
@@ -215,7 +198,7 @@ li:last-child {
 }
 
 .user-icon {
-    width: 50px; /* Adjust as needed */
+    width: 50px;
     height: auto;
     display: inline-block;
     vertical-align: middle;
@@ -225,7 +208,7 @@ li:last-child {
     display: inline-block;
     vertical-align: middle;
     margin-left: 10px;
-    background-color: lightgrey; /* Adjust colors as needed */
+    background-color: lightgrey;
     color: white;
     padding: 10px 20px;
     text-decoration: none;
@@ -241,7 +224,7 @@ li:last-child {
     position: absolute;
     left: 20px;
     top: 20px;
-    background-color: lightgrey; /* Adjust colors as needed */
+    background-color: lightgrey;
     color: white;
     padding: 10px 20px;
     text-decoration: none;
@@ -288,4 +271,3 @@ footer {
 .footer-content a:hover {
     text-decoration: underline;
 }
-

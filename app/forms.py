@@ -29,5 +29,6 @@ class ResumeForm(FlaskForm):
     github = StringField('GitHub (optional)', validators=[Optional()])
     personal_website = StringField('Personal Website (optional)', validators=[Optional()])
     twitter = StringField('Twitter (optional)', validators=[Optional()])
+    additionals = TextAreaField('Additional information (optional)')
     job_description = TextAreaField('Job Description (required)', validators=[DataRequired()])
     submit = SubmitField('Generate Resume')

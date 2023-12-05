@@ -6,3 +6,4 @@ cv-venv
 /instance
 /data
 */__pycache__
+/notebooks

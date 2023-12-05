@@ -5,7 +5,7 @@
     <div class="row h-100 justify-content-center align-items-center">
         <div class="login-form">
             <div class="card-body">
-                <h2 class="card-title text-center">Login to Your Account</h2>
+                <h2 class="card-title text-center div-center">Login to Your Account</h2>
                 <form action="/login" class="form-floating" method="POST">
                     {{ form.hidden_tag() }}
                     <div class="form-group">
@@ -19,12 +19,12 @@
                             {{ form.remember }} Remember me
                         </label>
                     </div>
-                    <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex justify-content-between align-items-center div-center">
                         <button class="btn btn-primary btn-block" type="submit">Login</button>
                     </div>
                 </form>
             </div>
-            <div class="card-footer text-center">
+            <div class="card-footer div-center">
                 Don't have an account? <a href="/register">Sign Up</a>
             </div>
         </div>

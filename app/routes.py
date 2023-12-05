@@ -76,7 +76,11 @@ def generate():
         db.session.commit()
 
         # Generate the resume content
-        resume_content, resume_title = get_resume_content(form.data, test=False)
+        try:
+            resume_content, resume_title = get_resume_content(form.data)
+        except Exception as e:
+            logger.error(f'🤬error with OPENAI API: {e}')
+            return render_template('downtime.html')
 
 
         logger.info(f'User id🆔: {current_user.id}')

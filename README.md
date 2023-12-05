@@ -8,7 +8,7 @@ Engineering thesis project by Stefan Borek
 
 ### **Project structure**
 
-```
+```mermaid
 resgen/
 │
 ├── app/
@@ -18,8 +18,10 @@ resgen/
 │   ├── forms.py
 │   ├── static/
 │   │   ├── css/
+│   │   │   └── style.css
 │   │   ├── js/
-│   │   ├── images/
+│   │   │   └── main.js
+│   │   └── images/
 │   │
 │   └── templates/
 │       ├── archive.html
@@ -35,8 +37,9 @@ resgen/
 │   ├── generate_resume.py
 │   └── scrape_in.py
 │
-├── venv/ 
+├── venv/
 ├── requirements.txt
+├── .env
 ├── .gitignore
 └── run.py
 ```

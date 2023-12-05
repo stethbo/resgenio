@@ -2,8 +2,8 @@
 {% block content %}
     <div class="user-data-block">
         <div class="data-form login-form custom-wide-form">
-            <div class="card body">
-                <form id="generateForm" method="post" class="form-floating" onsubmit="showLoadingMessage()">
+            <div id="generateForm" class="card body">
+                <form  method="post" class="form-floating" onsubmit="showLoadingMessage()">
                     <h2 class="card-title text-center div-center">Generate Resume</h2>
 
                     {{ form.hidden_tag() }}
@@ -74,20 +74,13 @@
                         {{ form.submit(class="btn btn-primary btn-block") }}
                     </div>
                 </form>
-                   
             </div>
-            <div id="loadingMessage" style="display: none;" class="div-center">
-                <div class="loader">
-                    <img src="{{ url_for('static', filename='images/resgen_logo_no_bg.png') }}" width="123px">
-                </div>
-                <p>generating your <b>CV</b>📝</p>
+        </div>
+        <div id="loadingMessage" style="display: none;" class="div-center">
+            <div class="loader">
+                <img src="{{ url_for('static', filename='images/resgen_logo_no_bg.png') }}" width="123px">
             </div>
-            <!-- <div id="loadingMessage" style="display: none;">
-                <div class="loader">
-                    <img src="{{ url_for('static', filename='images/resgen_logo_no_bg.png') }}" width="123px">
-                </div>
-                <p>Improving your <b>CV</b>📝</p>
-            </div> -->
+            <p>generating your <b>CV</b>📝</p>
         </div>
     </div>
 {% endblock %}

@@ -110,7 +110,7 @@ def regenerate_resume_content(user_data:dict, old_resume_content: str, job_desc:
     prompt = f"Given this job description: \"{job_desc}\"\
     and follwoing candidate information: \"'{personal_info}\n{linkedin_data}'\n\"\
         you have provided following resume:\n```{old_resume_content}```\n\
-        Please improve it and retur new version in markdown format."
+        Please improve it and return new version in markdown format, include some emojis💜💚🚀."
     
     new_resume = prompt_llm(prompt, model=MODEL)
 

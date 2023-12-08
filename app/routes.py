@@ -67,6 +67,7 @@ def generate():
     form = ResumeForm(obj=user_details)
 
     if form.validate_on_submit():
+        logger.info(f'FORM validated on submit👍')
 
         if not user_details:
             user_details = UserDetails(user_id=current_user.id)
@@ -95,6 +96,8 @@ def generate():
         flash('Resume generated successfully.')
         # Redirect to the download route with the path of the temporary file
         return redirect(url_for('main.preview', resume_id=generated_id))
+
+    logger.warning(f'🤬FORM NOT validated om submit')
 
     return render_template('generate.html', form=form)
 

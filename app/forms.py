@@ -31,4 +31,4 @@ class ResumeForm(FlaskForm):
     twitter = StringField('Twitter (optional)', validators=[Optional()])
     additionals = TextAreaField('Additional information (optional)', validators=[Optional()])
     job_description = TextAreaField('Job Description (required)', validators=[DataRequired()])
-    submit = SubmitField('Generate Resume')
+    submit = SubmitField('Generuj CV')

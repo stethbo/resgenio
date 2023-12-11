@@ -8,7 +8,7 @@ Engineering thesis project by Stefan Borek
 
 ### **Struktura projektu**
 
-```mermaid
+```
 resgen/
 │
 ├── app/

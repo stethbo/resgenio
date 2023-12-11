@@ -4,36 +4,37 @@
         <div class="data-form login-form custom-wide-form">
             <div id="generateForm" class="card body">
                 <form  method="post" class="form-floating" onsubmit="showLoadingMessage()">
-                    <h2 class="card-title text-center div-center">Generate Resume</h2>
+                    <h2 class="card-title text-center div-center">Generowanie CV</h2>
 
                     {{ form.hidden_tag() }}
+                    
                     <div class="form-group">
                         <div class="form-group">
-                            {{ form.linkedin_url.label }}
+                            URL profilu LinkedIn (wymagane)
                         <span class="text-danger">
                         </span><br>
-                            {{ form.linkedin_url(class="form-control wide-input", placeholder="www.linkedin.com/in/your-name-886732123") }}
+                            {{ form.linkedin_url(class="form-control wide-input", placeholder="www.linkedin.com/in/nazwa-użytkownika-886732123") }}
                     </div>
                     <div class="form-group">
-                        {{ "Imię i Nazwisko" }}
+                        {{ "Imię i Nazwisko (wymagane)" }}
                         <span class="text-danger"></span><br>
-                        {{ form.full_name(class="form-control wide-input", placeholder="Full Name") }}
+                        {{ form.full_name(class="form-control wide-input", placeholder="Imię i Nazwisko") }}
                         {% for error in form.full_name.errors %}
                             <small class="form-text text-muted">(wymagane)</small>
                         {% endfor %}
                     </div>
 
                     <div class="form-group">
-                        {{ form.email.label }}
+                        Email (wymagane)
                         <span class="text-danger"></span><br>
-                        {{ form.email(class="form-control wide-input", placeholder="your.mail@mail.com") }}
+                        {{ form.email(class="form-control wide-input", placeholder="twój.mail@mail.com") }}
                         {% for error in form.email.errors %}
                             <small class="form-text text-muted">(wymagane)</small>
                         {% endfor %}
                     </div>
 
                     <div class="form-group">
-                        Numer telefonu
+                        Numer telefonu (wymagane)
                         <span class="text-danger"></span><br>
 
                         {{ form.phone_number(class="form-control wide-input", placeholder="+00 123123123") }}
@@ -43,32 +44,34 @@
                     </div>
 
                     <div class="form-group">
-                        {{ form.github.label }}<br>
+                        {{ "Github (opcjonalne)" }}
+                        <span class="text-danger"></span><br>
                         {{ form.github(class="form-control wide-input", placeholder="github.com/username") }}
                     </div>
 
                     <div class="form-group">
-                        Osobista witryna <br>
-                        {{ form.personal_website(class="form-control wide-input", placeholder="ww.yourdomain.com") }}
+                        Osobista witryna (opcjonalne)
+                        <span class="text-danger"></span><br>
+                        {{ form.personal_website(class="form-control wide-input", placeholder="www.twojadomena.pl") }}
                     </div>
 
                     <div class="form-group">
-                        {{ form.twitter.label }}<br>
+                        Twitter/X.com (opcjonalne)
+                        <span class="text-danger"></span><br>
                         {{ form.twitter(class="form-control wide-input", placeholder="Twitter") }}
                     </div>
 
                     <div class="form-group">
-                        {{ form.additionals.label }} 
+                        Dodatkowe informacje (opcjonalne)<br>
                         <span class="text-danger"></span><br>
                         {{ form.additionals(class="form-control wide-input long-text-input", placeholder="Dodatkowe informacje - projekty, osiągnięcia, wolontariat etc.") }}
                         
                     </div>
 
                     <div class="form-group">
-                        {{ form.job_description.label }} 
-                        Opis stanowiska
+                        Opis stanowiska (wymagane)
                         <span class="text-danger"></span><br>
-                        {{ form.job_description(class="form-control wide-input long-text-input", placeholder="Job Description") }}
+                        {{ form.job_description(class="form-control wide-input long-text-input", placeholder="Opis stanowiska pracy") }}
                         
                     </div>
 
@@ -78,12 +81,12 @@
                 </form>
 
             </div>
-            <div id="loadingMessage" style="display: none;" class="form-ceter">
-                <div class="loader">
-                    <img src="{{ url_for('static', filename='images/resgen_logo_no_bg.png') }}" width="123px">
-                </div>
-                <p>generujemy twoje <b>CV</b>📝</p>
-            </div> 
         </div>
+        <div id="loadingMessage" style="display: none;" class="form-ceter">
+            <div class="loader">
+                <img src="{{ url_for('static', filename='images/resgen_logo_no_bg.png') }}" width="123px">
+            </div>
+            <p>generujemy twoje <b>CV</b>📝</p>
+        </div> 
     </div>
 {% endblock %}

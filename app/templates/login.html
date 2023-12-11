@@ -7,9 +7,10 @@
             <div class="card-body">
                 <h2 class="card-title div-center">Zaloguj się</h2>
                 <form action="/login" class="form-floating" method="POST">
+                    {{ form.csrf_token }}
                     {{ form.hidden_tag() }}
                     <div class="form-group">
-                        {{ form.username(class="form-control", placeholder="Nazwa uytkownika") }}
+                        {{ form.username(class="form-control", placeholder="Nazwa użytkownika") }}
                     </div>
                     <div class="form-group">
                         {{ form.password(class="form-control", placeholder="Hasło") }}

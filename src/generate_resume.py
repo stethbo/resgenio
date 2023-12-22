@@ -29,14 +29,18 @@ def convert_user_data_to_string(user_data: dict) -> str:
     
 
 def create_prompt(job_desc: str, personal_info: str, linkedin_data: str):
-    prompt = f"Please create a custom resume in Markdown format for a position described below.\
-        Here are the details to include:\n\
-        '{personal_info}\n{linkedin_data}'\n\
-        Job description:\n\
-        '{job_desc}'\n\
-        Please structure the resume to highlight my qualifications effectively, with a professional\
-        layout suitable for a given job application. Include emojis to make it more colorful😊🚀\
-        don't include any unnecessary informations🔥."
+    prompt = f"Could you kindly generate a tailor-made resume using Markdown format, specifically crafted for the job \
+        role outlined below? The resume should incorporate the following details:\n\
+        Personal Information: {personal_info}\n\
+        LinkedIn Profile Insights: {linkedin_data}\n\
+        Additionally, the job description is as follows:\n\
+        Job Role Details: {job_desc}\n\n\
+        The resume should be meticulously organized to emphasize my qualifications in a manner most fitting for this job\
+        application, add short summary highlighting my skills and motivation The layout needs to be professional yet visually appealing. To add a vibrant touch, please \
+        integrate emojis thoughtfully throughout the resume, ensuring they enhance rather than detract from the content. \
+        It's important to focus solely on relevant information, avoiding any extraneous details.\
+        Thank you for your assistance in creating a resume that stands out both in professionalism and personality! 😊🚀🔥"
+    with open("prompt.txt", 'w') as file_: file_.write(prompt)
     return prompt
 
 
@@ -110,7 +114,7 @@ def regenerate_resume_content(user_data:dict, old_resume_content: str, job_desc:
     prompt = f"Given this job description: \"{job_desc}\"\
     and follwoing candidate information: \"'{personal_info}\n{linkedin_data}'\n\"\
         you have provided following resume:\n```{old_resume_content}```\n\
-        Please improve it and return new version in markdown format, include some emojis💜💚🚀."
+        Please improve it and return new version in markdown format, include some emojis💚🚀."
     
     new_resume = prompt_llm(prompt, model=MODEL)
 

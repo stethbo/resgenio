@@ -14,6 +14,8 @@ from src.generate_resume import get_resume_content, regenerate_resume_content
 
 main_blueprint = Blueprint('main', __name__)
 logger = logging.getLogger(__file__)
+module_logger = logging.getLogger("fontTools")
+module_logger.setLevel(logging.CRITICAL)
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -122,12 +124,10 @@ def preview(resume_id):
 def pdf_preview(resume_id):
     resume = Resumes.query.get_or_404(resume_id)
 
-    # Convert the Markdown content to HTML
     html_content = markdown.markdown(resume.content)
     logger.info(f'type of content from DB: {type(html_content)}')
 
     with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as temp:
-        # Create a path for the temp file to send it
         temp_file_path = temp.name
         HTML(string=html_content).write_pdf(temp.name)
 

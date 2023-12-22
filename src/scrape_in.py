@@ -6,7 +6,6 @@ import time
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from datetime import datetime
@@ -58,9 +57,9 @@ def log_in_vol_2(driver):
 
 def get_page_source(user_url: str):
     options = Options()
-    options.add_argument("--headless=new")
+    # options.add_argument("--headless=new")
     logger.info(options)
-    driver = webdriver.Chrome(options=options)
+    driver = webdriver.Firefox() #options=options)
     driver.get(URL) # going to LinkedIn.com
     try:
         driver = log_in_vol_1(driver)
@@ -112,7 +111,7 @@ def cut_key_paragraphs(page_content: str) -> str:
     user_info = ''
     user_info += 'Experience:\n' + get_section(page_content, 'Experience', 'Education')
     user_info += '\nEducation\n' + get_section(page_content, 'Education', 'Licenses & certifications')
-    user_info += '\nCertifications\n' + get_section(page_content, 'Licenses & certifications', 'Skills')
+    user_info += '\nCertifications\n' + get_section(page_content, 'Licenses & certifications', 'Skills\n')
     return user_info
 
 
@@ -143,11 +142,9 @@ def get_linkedin_data(user_url: str) -> str:
     logger.info(f"Working on user ID: {user_id}")
 
     try:
-        # Query the database for the URL
         record = LinkedinData.query.filter_by(url=user_url).one()
         user_info = record.profile_data
     except NoResultFound:
-        # If not found, scrape and add to database
         user_info = generate_page_paragraphs(profile_url=user_url)
         new_record = LinkedinData(url=user_url, profile_data=user_info, timestamp=datetime.now())
         db.session.add(new_record)
